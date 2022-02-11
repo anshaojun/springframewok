@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personal.springframework.repository.MenuMapper">
+    <resultMap id="baseResultMap" type="com.personal.springframework.model.Menu">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="menu_name" property="menuName" jdbcType="VARCHAR"/>
+        <result column="permission" property="permission" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
+        <result column="mlevel" property="mLevel" jdbcType="VARCHAR"/>
+        <result column="is_leaf" property="isLeaf" jdbcType="VARCHAR"/>
+        <association property="parent" javaType="com.personal.springframework.model.Menu" select="getParent"
+                     column="parent_id"/>
+    </resultMap>
+    <resultMap id="treeMap" type="com.personal.springframework.model.Menu">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="menu_name" property="menuName" jdbcType="VARCHAR"/>
+        <result column="permission" property="permission" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
+        <result column="mlevel" property="mLevel" jdbcType="VARCHAR"/>
+        <result column="is_leaf" property="isLeaf" jdbcType="VARCHAR"/>
+        <collection property="child" ofType="com.personal.springframework.model.Menu" column="id"
+                    select="getChild"/>
+    </resultMap>
+
+
+    <sql id="baseColumn">
+        a.id,
+        a.menu_name,
+        a.parent_id,
+        a.permission,
+        a.type,
+        a.url,
+        a.icon,
+        a.mlevel,
+        a.is_leaf
+    </sql>
+
+    <select id="loadMenuTree" resultMap="treeMap">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_MENU a
+        where a.parent_id='0'
+    </select>
+
+    <select id="getChild" resultMap="treeMap">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_MENU a
+        where a.parent_id=#{id,jdbcType=VARCHAR}
+    </select>
+    <select id="getParent" resultMap="baseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_MENU a
+        where a.id=#{parent_id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getByParam" parameterType="java.util.Map" resultMap="baseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_MENU a
+        <if test="id!=null">
+            inner join tbl_core_role_menu r
+            on r.id=#{id,jdbcType=VARCHAR} and r.id=a.id
+        </if>
+        <where>
+            <if test="id!=null and id!=''">
+                and a.id=#{id,jdbcType=VARCHAR}
+            </if>
+            <if test="menuName!=null and menuName!=''">
+                and a.menu_name=#{menuName,jdbcType=VARCHAR}
+            </if>
+            <if test="parent!=null and parent.id!=null and parent.id!=''">
+                and a.parent_id=#{parent.id,jdbcType=VARCHAR}
+            </if>
+            <if test="permission!=null and permission!=''">
+                and a.permission=#{permission,jdbcType=VARCHAR}
+            </if>
+            <if test="type!=null and type!=''">
+                and a.type=#{type,jdbcType=VARCHAR}
+            </if>
+            <if test="mLevel!=null and mLevel!=''">
+                and a.mlevel=#{mLevel,jdbcType=VARCHAR}
+            </if>
+            <if test="isLeaf!=null and isLeaf!=''">
+                and a.is_leaf=#{isLeaf,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="getByPage" parameterType="Menu" resultMap="baseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_MENU a
+        <where>
+            <if test="id!=null and id!=''">
+                and a.id=#{id,jdbcType=VARCHAR}
+            </if>
+            <if test="menuName!=null and menuName!=''">
+                and a.menu_name=#{menuName,jdbcType=VARCHAR}
+            </if>
+            <if test="parent!=null and parent.id!=null and parent.id!=''">
+                and a.parent_id=#{parent.id,jdbcType=VARCHAR}
+            </if>
+            <if test="permission!=null and permission!=''">
+                and a.permission=#{permission,jdbcType=VARCHAR}
+            </if>
+            <if test="type!=null and type!=''">
+                and a.type=#{type,jdbcType=VARCHAR}
+            </if>
+            <if test="mLevel!=null and mLevel!=''">
+                and a.mlevel=#{mLevel,jdbcType=VARCHAR}
+            </if>
+            <if test="isLeaf!=null and isLeaf!=''">
+                and a.is_leaf=#{isLeaf,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="Menu">
+        INSERT INTO TBL_CORE_MENU (id,
+                                   menu_name,
+                                   parent_id,
+                                   permission,
+                                   type,
+                                   url,
+                                   icon,
+                                   mlevel,
+                                   is_leaf)
+        VALUES (sys_guid(),
+                #{menuName,jdbcType=VARCHAR},
+                #{parent.id,jdbcType=VARCHAR},
+                #{permission,jdbcType=VARCHAR},
+                #{type,jdbcType=VARCHAR},
+                #{url,jdbcType=VARCHAR},
+                #{icon,jdbcType=VARCHAR},
+                #{mLevel,jdbcType=VARCHAR},
+                #{isLeaf,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="update" parameterType="Menu">
+        update TBL_CORE_MENU
+        <set>
+            <if test="menuName!=null and menuName!=''">
+                menu_name=#{menuName,jdbcType=VARCHAR},
+            </if>
+            <if test="parent!=null and parent.id!=null and parent.id!=''">
+                parent_id=#{parent.id,jdbcType=VARCHAR},
+            </if>
+            <if test="permission!=null and permission!=''">
+                permission=#{permission,jdbcType=VARCHAR},
+            </if>
+            <if test="type!=null and type!=''">
+                type=#{type,jdbcType=VARCHAR},
+            </if>
+            <if test="mLevel!=null and mLevel!=''">
+                mlevel=#{mLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="url!=null">
+                url=#{url,jdbcType=VARCHAR},
+            </if>
+            <if test="icon!=null">
+                icon=#{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="isLeaf!=null and isLeaf!=''">
+                is_leaf=#{isLeaf,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id=#{id,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE
+        FROM TBL_CORE_MENU
+        WHERE id = #{id,jdbcType=VARCHAR}
+    </delete>
+
+    <select id="getById" parameterType="java.lang.String" resultMap="baseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_MENU a
+        where a.id=#{id,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByParent" parameterType="java.lang.String">
+        delete from TBL_CORE_MENU where parent_id=#{parentId,jdbcType=VARCHAR}
+    </delete>
+</mapper>

@@ -1,0 +1,10 @@
+.error{
+    color: #FA8471;
+    font-size: 12px;
+    width: 100%;
+    font-family: initial;
+    opacity: .95;
+}
+.hide {
+    display: none;
+}

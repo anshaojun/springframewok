@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personal.springframework.repository.UserMapper">
+    <resultMap id="baseResultMap" type="com.personal.springframework.model.User">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="pass_word" property="passWord" jdbcType="VARCHAR"/>
+        <result column="nick_name" property="nickName" jdbcType="VARCHAR"/>
+        <result column="mail" property="mail" jdbcType="VARCHAR"/>
+        <result column="tel" property="tel" jdbcType="VARCHAR"/>
+        <result column="portrait" property="portrait" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP"/>
+        <result column="last_login_ip" property="lastLoginIp" jdbcType="VARCHAR"/>
+        <!--<association property="agency"
+                     javaType="com.personal.springframework.model.Agency" fetchType="eager"
+                     column="{agencyId=agency_id}" select="getAgency"/>-->
+        <collection property="roleList"
+                    ofType="com.personal.springframework.model.Role"
+                    fetchType="eager"
+                    javaType="java.util.List"
+                    column="{id=id}"
+                    select="getRole"/>
+    </resultMap>
+
+    <resultMap id="agencyResultMap" type="com.personal.springframework.model.Agency">
+        <id column="agency_id" property="agencyId"/>
+        <result column="agency_code" property="agencyCode" jdbcType="VARCHAR"/>
+        <result column="agency_name" property="agencyName" jdbcType="VARCHAR"/>
+        <result column="parent_id" property="parentId" jdbcType="VARCHAR"/>
+        <result column="is_leaf" property="isLeaf" jdbcType="INTEGER"/>
+        <result column="level" property="level" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="roleResultMap" type="com.personal.springframework.model.Role">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="role_name" property="roleName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="getAgency" parameterType="java.util.Map" resultMap="agencyResultMap">
+        SELECT a.agency_id, a.agency_code, a.agency_name, a.parent_id
+        FROM tbl_core_agency a
+        WHERE a.agency_id = #{agencyId,jdbcType=VARCHAR}
+    </select>
+    <select id="getRole" parameterType="java.util.Map" resultMap="roleResultMap">
+        SELECT r.id, r.role_name
+        FROM TBL_CORE_USER u,
+             TBL_CORE_ROLE r,
+             TBL_CORE_USER_ROLE ur
+        WHERE u.id = ur.user_id
+          AND r.id = ur.role_id
+          AND u.id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <sql id="baseColumn">
+        a.id,
+        a.user_name,
+        a.pass_word,
+        a.nick_name,
+        a.tel,
+        a.mail,
+        a.last_login_time,
+        a.last_login_ip,
+        a.portrait
+    </sql>
+
+    <select id="getByPage" parameterType="User" resultMap="baseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_USER a
+        <where>
+            <if test="id!=null and id!=''">
+                and a.id=#{id,jdbcType=VARCHAR}
+            </if>
+            <if test="userName!=null and userName!=''">
+                and a.user_name=#{userName,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="getByParam" parameterType="java.util.Map" resultMap="baseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_USER a
+        <where>
+            <if test="id!=null and id!=''">
+                and a.id=#{id,jdbcType=VARCHAR}
+            </if>
+            <if test="userName!=null and userName!=''">
+                and a.user_name=#{userName,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="loginCheck" parameterType="User" resultMap="baseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_USER a
+        where a.user_name=#{userName}
+        and a.pass_word=#{passWord}
+    </select>
+
+    <select id="userCheck" parameterType="User" resultMap="baseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_USER a
+        where a.user_name=#{userName}
+    </select>
+
+    <insert id="insert" parameterType="User">
+        INSERT INTO TBL_CORE_USER(id,
+                                  user_name,
+                                  pass_word,
+                                  nick_name,
+                                  tel,
+                                  mail,
+                                  last_login_time,
+                                  last_login_ip,
+                                  portrait)
+        VALUES (sys_guid(),
+                #{userName,jdbcType=VARCHAR},
+                #{passWord,jdbcType=VARCHAR},
+                #{nickName,jdbcType=VARCHAR},
+                #{tel,jdbcType=VARCHAR},
+                #{mail,jdbcType=VARCHAR},
+                #{lastLoginTime,jdbcType=TIMESTAMP},
+                #{lastLoginIp,jdbcType=TIMESTAMP},
+                #{portrait,jdbcType=CLOB}
+                )
+    </insert>
+
+    <update id="update" parameterType="User">
+        update TBL_CORE_USER
+        <set>
+            <if test="id!=null and id!=''">
+                id=#{id,jdbcType=VARCHAR},
+            </if>
+            <if test="userName!=null and userName!=''">
+                user_name=#{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="nickName!=null and nickName!=''">
+                nick_name=#{nickName,jdbcType=VARCHAR},
+            </if>
+            <if test="tel!=null and tel!=''">
+                tel=#{tel,jdbcType=VARCHAR},
+            </if>
+            <if test="lastLoginTime!=null">
+                last_login_time=#{lastLoginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastLoginIp!=null and lastLoginIp!=''">
+                last_login_ip=#{lastLoginIp,jdbcType=VARCHAR},
+            </if>
+            <if test="portrait!=null and portrait!=''">
+                portrait=#{portrait,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id=#{id,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="delete" parameterType="User">
+        delete from TBL_CORE_USER where id=#{id,jdbcType=VARCHAR}
+    </delete>
+</mapper>

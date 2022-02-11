@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personal.springframework.repository.RoleMapper">
+    <resultMap id="baseResultMap" type="com.personal.springframework.model.Role">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="role_name" property="roleName" jdbcType="VARCHAR"/>
+        <result column="permission" property="permission" jdbcType="VARCHAR"/>
+        <collection property="menuList"
+                    ofType="com.personal.springframework.model.Role"
+                    fetchType="eager"
+                    javaType="java.util.List"
+                    column="{id=id}"
+                    select="getMenu"/>
+        <collection property="userList"
+                    ofType="com.personal.springframework.model.User"
+                    fetchType="eager"
+                    javaType="java.util.List"
+                    column="{id=id}"
+                    select="getUser"/>
+    </resultMap>
+    <resultMap id="menuResultMap" type="com.personal.springframework.model.Menu">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="menu_name" property="menuName" jdbcType="VARCHAR"/>
+        <result column="parent_id" property="parent.id" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="userResultMap" type="com.personal.springframework.model.User">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="getMenu" parameterType="java.util.Map" resultMap="menuResultMap">
+        SELECT m.id, m.menu_name, m.parent_id
+        FROM TBL_CORE_MENU m,
+             TBL_CORE_ROLE r,
+             TBL_CORE_ROLE_MENU rm
+        WHERE m.id = rm.menu_id
+          AND r.id = rm.role_id
+          AND r.id = #{id,jdbcType=VARCHAR}
+    </select>
+    <select id="getUser" parameterType="java.util.Map" resultMap="menuResultMap">
+        SELECT u.id, u.user_name
+        FROM tbl_core_user u,
+             TBL_CORE_ROLE r,
+             tbl_core_user_role ur
+        WHERE u.id = ur.user_id
+          AND r.id = ur.role_id
+          AND u.id = #{id,jdbcType=VARCHAR}
+    </select>
+    <sql id="baseColumn">
+        a.id,
+        a.role_name,
+        a.permission
+    </sql>
+
+    <select id="getByPage" parameterType="Role" resultMap="baseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_ROLE a
+        <where>
+            <if test="id!=null and id!=''">
+                and a.id=#{id,jdbcType=VARCHAR}
+            </if>
+            <if test="roleName!=null and roleName!=''">
+                and instr(a.role_name,#{roleName,jdbcType=VARCHAR})>0
+            </if>
+        </where>
+    </select>
+
+    <select id="getByParam" parameterType="java.util.Map" resultMap="baseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_ROLE a
+        <where>
+            <if test="id!=null and id!=''">
+                and a.id=#{id,jdbcType=VARCHAR}
+            </if>
+            <if test="roleName!=null and roleName!=''">
+                and a.role_name=#{roleName,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+
+    <insert id="insert" parameterType="Role">
+        INSERT INTO TBL_CORE_ROLE(id,
+            role_name,
+            permission)
+        VALUES (sys_guid(),
+                #{roleName,jdbcType=VARCHAR},
+                #{permission,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="update" parameterType="Role">
+        update TBL_CORE_ROLE
+        <set>
+            <if test="id!=null and id!=''">
+                id=#{id,jdbcType=VARCHAR},
+            </if>
+            <if test="roleName!=null and roleName!=''">
+                role_name=#{roleName,jdbcType=VARCHAR},
+            </if>
+            <if test="permission!=null and permission!=''">
+                permission=#{permission,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id=#{id,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="delete" parameterType="Role">
+        DELETE
+        FROM TBL_CORE_ROLE
+        WHERE id = #{id,jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="deleteRoleMenu" parameterType="java.lang.String">
+        DELETE
+        FROM TBL_CORE_ROLE_MENU
+        WHERE role_id = #{roleId,jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="deleteMenuRole" parameterType="java.lang.String">
+        DELETE
+        FROM TBL_CORE_ROLE_MENU
+        WHERE menu_id = #{menuId,jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="deleteRoleUser" parameterType="java.lang.String">
+        DELETE
+        FROM TBL_CORE_USER_ROLE
+        WHERE role_id = #{roleId,jdbcType=VARCHAR}
+    </delete>
+
+    <select id="getByUniqueParam" parameterType="java.util.Map" resultMap="baseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_ROLE a where a.${column}=#{value}
+    </select>
+
+    <select id="getById" resultMap="baseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_ROLE a where a.id=#{id,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="batchDeleteRoleMenu" parameterType="java.util.List">
+        DELETE
+        FROM TBL_CORE_ROLE_MENU
+        WHERE menu_id IN (
+        <foreach collection="menus" index="index" item="menu" separator=",">
+            #{menu.id,jdbcType=VARCHAR}
+        </foreach>
+        )
+    </delete>
+
+    <insert id="batchInsertRoleMenu">
+        INSERT INTO TBL_CORE_ROLE_MENU
+        (
+        role_ID,
+        menu_id
+        )
+        <foreach item="item" index="index" collection="menus" separator="union all">
+            (
+            SELECT
+            #{roleId,jdbcType=VARCHAR},
+            #{item,jdbcType=VARCHAR}
+            FROM DUAL
+            )
+        </foreach>
+    </insert>
+</mapper>
