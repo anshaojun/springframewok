@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.personal.springframework</groupId>
-    <artifactId>general</artifactId>
+    <artifactId>springframework</artifactId>
     <version>1.0</version>
     <packaging>war</packaging>
     <name>springframework</name>
