@@ -273,17 +273,17 @@
         <legend>菜单树</legend>
         <shiro:hasPermission name="sys:menu:add">
             <button id="addMenu" class="layui-btn layui-btn-sm  layui-btn-normal" lay-demo="addMenu"><i
-                    class="layui-icon">&#xe654;</i>添加下级菜单
+                    class="layui-icon layui-icon-add-1"></i>添加下级菜单
             </button>
         </shiro:hasPermission>
         <shiro:hasPermission name="sys:menu:edit">
             <button id="editMenu" class="layui-btn layui-btn-sm layui-btn-checked" lay-demo="addMenu"><i
-                    class="layui-icon">&#xe642;</i>修改
+                    class="layui-icon layui-icon-edit"></i>修改
             </button>
         </shiro:hasPermission>
         <shiro:hasPermission name="sys:menu:del">
             <button id="delMenu" class="layui-btn layui-btn-sm layui-btn-danger" lay-demo="delMenu"><i
-                    class="layui-icon">&#xe67e;</i>删除
+                    class="layui-icon layui-icon-delete"></i>删除
             </button>
         </shiro:hasPermission>
         <div id="menu_tree"></div>
@@ -295,7 +295,7 @@
         <form class="layui-form" action="" onsubmit="return false">
             <input id="id" type="text" name="id" style="display: none">
             <div class="layui-form-item">
-                <label class="layui-form-label">菜单名</label>
+                <label class="layui-form-label"><font color="red">*</font>菜单名</label>
                 <div class="layui-input-block">
                     <input id="menuName" type="text" name="menuName" required lay-verify="required"
                            placeholder="请输入输入框内容"
@@ -311,7 +311,7 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">权限标识</label>
+                <label class="layui-form-label"><font color="red">*</font>权限标识</label>
                 <div class="layui-input-block">
                     <input id="permission" type="text" name="permission" required lay-verify="required"
                            placeholder="请输入输入框内容"
@@ -323,14 +323,14 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">类型</label>
+                <label class="layui-form-label"><font color="red">*</font>类型</label>
                 <div class="layui-input-block">
                     <input name="type" value="1" type="radio" title="按钮" checked="" lay-filter="type" disabled>
                     <input name="type" value="0" type="radio" title="菜单" lay-filter="type" disabled>
                 </div>
             </div>
             <div class="layui-form-item hide" id="urlbox">
-                <label class="layui-form-label">访问地址</label>
+                <label class="layui-form-label"><font color="red">*</font>访问地址</label>
                 <div class="layui-input-block">
                     <input id="url" type="text" name="url" placeholder="请输入输入框内容" autocomplete="off"
                            class="layui-input" maxlength="100"
@@ -341,13 +341,13 @@
                 </div>
             </div>
             <div class="layui-form-item hide" id="iconbox">
-                <label class="layui-form-label">图标</label>
+                <label class="layui-form-label"><font color="red">*</font>图标</label>
                 <div class="layui-input-block">
                     <input id="iconPicker" name="icon" lay-filter="iconPicker">
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">是否底级</label>
+                <label class="layui-form-label"><font color="red">*</font>是否底级</label>
                 <div class="layui-input-block">
                     <input name="isLeaf" value="1" type="radio" title="是" checked="" disabled>
                     <input name="isLeaf" value="0" type="radio" title="否" disabled>

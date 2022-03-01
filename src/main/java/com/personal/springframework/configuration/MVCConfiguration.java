@@ -5,7 +5,9 @@ import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.personal.springframework.interceptor.core.AccessLimitInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.boot.web.server.ErrorPageRegistrar;
 import org.springframework.boot.web.server.ErrorPageRegistry;
@@ -16,6 +18,8 @@ import org.springframework.core.Ordered;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -24,11 +28,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @description:
+ * @description:mvc配置
  * @author: anshaojun
  * @time: 2021-05-20 08:40
  */
 @Configuration
+@ConfigurationProperties(prefix = "resolver")
 public class MVCConfiguration implements WebMvcConfigurer, ErrorPageRegistrar {
 
     @Override
@@ -42,6 +47,13 @@ public class MVCConfiguration implements WebMvcConfigurer, ErrorPageRegistrar {
         configurer.favorPathExtension(false);
     }
 
+    /**
+     * @Author 安少军
+     * @Description 设置视图层前后缀
+     * @Date 15:51 2022/3/1
+     * @Param []
+     * @return org.springframework.web.servlet.view.InternalResourceViewResolver
+     **/
     @Bean
     public InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -50,6 +62,13 @@ public class MVCConfiguration implements WebMvcConfigurer, ErrorPageRegistrar {
         return viewResolver;
     }
 
+    /**
+     * @Author 安少军
+     * @Description 设置请求后缀
+     * @Date 15:52 2022/3/1
+     * @Param [dispatcherServlet]
+     * @return org.springframework.boot.web.servlet.ServletRegistrationBean
+     **/
     @Bean
     public ServletRegistrationBean servletRegistrationBean(DispatcherServlet dispatcherServlet) {
         ServletRegistrationBean<DispatcherServlet> servletServletRegistrationBean = new ServletRegistrationBean<>(dispatcherServlet);
@@ -106,6 +125,13 @@ public class MVCConfiguration implements WebMvcConfigurer, ErrorPageRegistrar {
         registry.addResourceHandler("/html/**").addResourceLocations("classpath:static/html/");
     }
 
+    /**
+     * @Author 安少军
+     * @Description 注册404页面
+     * @Date 15:52 2022/3/1
+     * @Param [registry]
+     * @return void
+     **/
     @Override
     public void registerErrorPages(ErrorPageRegistry registry) {
         ErrorPage[] errorPages = new ErrorPage[1];
@@ -113,6 +139,13 @@ public class MVCConfiguration implements WebMvcConfigurer, ErrorPageRegistrar {
         registry.addErrorPages(errorPages);
     }
 
+    /**
+     * @Author 安少军
+     * @Description 过滤器
+     * @Date 15:53 2022/3/1
+     * @Param []
+     * @return com.personal.springframework.interceptor.core.AccessLimitInterceptor
+     **/
     @Bean
     public AccessLimitInterceptor accessLimitInterceptor(){
         return new AccessLimitInterceptor();
@@ -121,5 +154,34 @@ public class MVCConfiguration implements WebMvcConfigurer, ErrorPageRegistrar {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(accessLimitInterceptor());
+    }
+
+
+    @Value("${resolver.defaultEncoding}")
+    private String defaultEncoding;
+    @Value("${resolver.resolveLazily}")
+    private boolean resolveLazily;
+    @Value("${resolver.maxInMemorySize}")
+    private int maxInMemorySize;
+    @Value("${resolver.maxUploadSize}")
+    private long maxUploadSize;
+
+    /**
+     * @Author 安少军
+     * @Description 文件上传
+     * @Date 15:53 2022/3/1
+     * @Param []
+     * @return org.springframework.web.multipart.MultipartResolver
+     **/
+    @Bean(name = "multipartResolver")
+    public MultipartResolver multipartResolver(){
+        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+        resolver.setDefaultEncoding(defaultEncoding);
+        //resolveLazily属性启用是为了推迟文件解析，以在在UploadAction中捕获文件大小异常
+        resolver.setResolveLazily(resolveLazily);
+        resolver.setMaxInMemorySize(maxInMemorySize);
+        //上传文件大小 50M 50*1024*1024
+        resolver.setMaxUploadSize(maxUploadSize);
+        return resolver;
     }
 }

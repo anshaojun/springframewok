@@ -75,7 +75,7 @@ public class RoleManageController extends AbstractController {
      * @Param []
      **/
     @RequestMapping("form")
-    @RequiresPermissions(value = {"sys:permission:role:add", "sys:permission:role:add"}, logical = Logical.OR)
+    @RequiresPermissions(value = {"sys:permission:role:add", "sys:permission:role:edit"}, logical = Logical.OR)
     public String form(HttpServletRequest request) {
         List permissions = new ArrayList<>();
         for (Permission p : Permission.values()) {
@@ -93,7 +93,7 @@ public class RoleManageController extends AbstractController {
      * @Param [role]
      **/
     @RequestMapping("save")
-    @RequiresPermissions(value = {"sys:permission:role:add", "sys:permission:role:add"}, logical = Logical.OR)
+    @RequiresPermissions(value = {"sys:permission:role:add", "sys:permission:role:edit"}, logical = Logical.OR)
     @ResponseBody
     public ResponseResult save(@Validated Role role) {
         roleManageService.saveNotExists(role, "role_name", "roleName", "角色名称");

@@ -11,12 +11,12 @@ $(function () {
                 $("#portrait,#headicon").attr("src", "data:image/jpg;base64," + user.portrait);
                 $("#username span").text(user.nickName);
                 var menu = user.menuList;
-                if (menu.length != 0) {
+                if (menu && menu.length != 0) {
                     for (var i = 0; i < menu.length; i++) {
                         var m = menu[i];
                         if (m.type != '1') {
                             var isleaf = m.isLeaf == '1' ? 'leaf' : "";
-                            var onelevel = $('<div class="h1 ' + isleaf + '" url="'+m.url+'"><i class="layui-icon '+m.icon+'"></i>' + m.menuName + '</div>');
+                            var onelevel = $('<div class="h1 ' + isleaf + '" url="' + m.url + '"><i class="layui-icon ' + m.icon + '"></i>' + m.menuName + '</div>');
                             if (m.child.length != 0) {
                                 var twoWraper = $('<div class="con hide"></div>');
                             }
@@ -24,7 +24,7 @@ $(function () {
                                 var n = m.child[j];
                                 if (n.type != '1') {
                                     isleaf = n.isLeaf == '1' ? 'leaf' : "";
-                                    var twolevel = $('<div class="h2 ' + isleaf + '"  url="'+n.url+'"><i class="layui-icon '+n.icon+'"></i>' + n.menuName + '</div>');
+                                    var twolevel = $('<div class="h2 ' + isleaf + '"  url="' + n.url + '"><i class="layui-icon ' + n.icon + '"></i>' + n.menuName + '</div>');
                                     $(twoWraper).append(twolevel);
                                 }
                             }
@@ -86,7 +86,7 @@ $(function () {
     });
     $("#menuArea .h1,#menuArea .h2").click(function () {
         if ($(this).hasClass("leaf")) {
-            $("#mainFrame").attr("src",ctx+"/"+$(this).attr("url"));
+            $("#mainFrame").attr("src", ctx + "/" + $(this).attr("url"));
         } else {
             show(this);
         }

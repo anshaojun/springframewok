@@ -47,13 +47,12 @@ public abstract class BaseService<T extends BaseEntity, M extends BaseMapper<T>>
     }
 
     @Transactional(readOnly = false)
-    public void insert(T clazz) {
-        mapper.insert(clazz);
-    }
-
-    @Transactional(readOnly = false)
-    public void update(T clazz) {
-        mapper.update(clazz);
+    public void save(T clazz) {
+        if(clazz.isNew()){
+            mapper.insert(clazz);
+        }else{
+            mapper.update(clazz);
+        }
     }
 
     @Transactional(readOnly = false)

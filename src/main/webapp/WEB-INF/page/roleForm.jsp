@@ -13,7 +13,7 @@
 <fieldset class="layui-elem-field layui-field-box" style="border: none">
     <form class="layui-form" action="" onsubmit="return false">
         <div class="layui-form-item">
-            <label class="layui-form-label">角色名称</label>
+            <label class="layui-form-label"><font color="red">*</font>角色名称</label>
             <div class="layui-input-block">
                 <input type="hidden" id="id" name="id" value="${role.id}">
                 <input type="text" id="roleName" name="roleName" required lay-verify="required" placeholder="请输入输入框内容"
@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">角色权限</label>
+            <label class="layui-form-label"><font color="red">*</font>角色权限</label>
             <div class="layui-input-block">
                 <select name="permission" id="permission" lay-verify="required" lay-search>
                     <option value=""></option>

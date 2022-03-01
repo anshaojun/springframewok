@@ -67,7 +67,7 @@ public class MenuManageService extends BaseService<Menu, MenuMapper> {
                 if(menu.getType().equals(MenuOptions.MENU.getId())){
                     if (parent.getType().equals(MenuOptions.MENU.getId()) && parent.getIsLeaf().equals(MenuOptions.LEAF.getId())) {
                         parent.setIsLeaf(MenuOptions.NORLEAF.getId());
-                        super.update(parent);
+                        super.save(parent);
                     }
                 }
             } else {
@@ -86,11 +86,7 @@ public class MenuManageService extends BaseService<Menu, MenuMapper> {
                     throw new ServiceException("菜单无子菜单，必须为底级");
                 }
             }
-            if (menu.isNew()) {
-                super.insert(menu);
-            } else {
-                super.update(menu);
-            }
+            super.save(menu);
         } catch (ServiceException se) {
             se.printStackTrace();
             throw se;

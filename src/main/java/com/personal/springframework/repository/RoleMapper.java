@@ -20,6 +20,8 @@ public interface RoleMapper extends BaseMapper<Role> {
 
     void deleteRoleUser(@Param("roleId") String roleId);
 
+    void deleteUserRole(@Param("userId") String userId);
+
     int batchDeleteRoleMenu(@Param("menus") List<Menu> menus);
 
     void batchInsertRoleMenu(@Param("roleId") String roleId,@Param("menus") List<String> menus);

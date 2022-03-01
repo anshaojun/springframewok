@@ -129,6 +129,12 @@
         WHERE role_id = #{roleId,jdbcType=VARCHAR}
     </delete>
 
+    <delete id="deleteUserRole" parameterType="java.lang.String">
+        DELETE
+        FROM TBL_CORE_USER_ROLE
+        WHERE user_id = #{userId,jdbcType=VARCHAR}
+    </delete>
+
     <select id="getByUniqueParam" parameterType="java.util.Map" resultMap="baseResultMap">
         select
         <include refid="baseColumn"/>

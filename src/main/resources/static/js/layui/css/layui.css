@@ -2172,6 +2172,9 @@ a cite {
     clear: both;
     *zoom: 1
 }
+.layui-form-item .center{
+    text-align: center;
+}
 
 .layui-form-item:after {
     content: '\20';
@@ -3274,7 +3277,7 @@ a cite {
 }
 
 .layui-table-cell .layui-form-checkbox[lay-skin=primary] {
-    top: -1px;
+    top: 5px;
     padding: 0
 }
 

@@ -62,6 +62,13 @@
         a.portrait
     </sql>
 
+    <select id="getById" parameterType="java.lang.String" resultMap="baseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_USER a
+        where a.id=#{id,jdbcType=VARCHAR}
+    </select>
+
     <select id="getByPage" parameterType="User" resultMap="baseResultMap">
         select
         <include refid="baseColumn"/>
@@ -71,7 +78,16 @@
                 and a.id=#{id,jdbcType=VARCHAR}
             </if>
             <if test="userName!=null and userName!=''">
-                and a.user_name=#{userName,jdbcType=VARCHAR}
+                and instr(a.user_name,#{userName,jdbcType=VARCHAR})>0
+            </if>
+            <if test="nickName!=null and nickName!=''">
+                and instr(a.nick_name,#{nickName,jdbcType=VARCHAR})>0
+            </if>
+            <if test="tel!=null and tel!=''">
+                and instr(a.tel,#{tel,jdbcType=VARCHAR})>0
+            </if>
+            <if test="mail!=null and mail!=''">
+                and instr(a.mail,#{mail,jdbcType=VARCHAR})>0
             </if>
         </where>
     </select>
@@ -154,7 +170,11 @@
         </set>
         where id=#{id,jdbcType=VARCHAR}
     </update>
-
+    <select id="getByUniqueParam" parameterType="java.util.Map" resultMap="baseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_USER a where a.${column}=#{value}
+    </select>
     <delete id="delete" parameterType="User">
         delete from TBL_CORE_USER where id=#{id,jdbcType=VARCHAR}
     </delete>
