@@ -86,7 +86,7 @@ $(function () {
     });
     $("#menuArea .h1,#menuArea .h2").click(function () {
         if ($(this).hasClass("leaf")) {
-            $("#mainFrame").attr("src",ctx+$(this).attr("url"));
+            $("#mainFrame").attr("src",ctx+"/"+$(this).attr("url"));
         } else {
             show(this);
         }

@@ -32,6 +32,16 @@
             //表单提交事件
             layui.use('form', function () {
                 form = layui.form;
+                form.verify({
+                    personal: function (e) {
+                        if (!e) {
+                            return "必填项不能为空";
+                        }
+                        if (e.indexOf("/") == 0) {
+                            return "不能以/开始";
+                        }
+                    }
+                });
                 form.on('submit(formDemo)', function (data) {
                     //新增
                     if ($("#id").val() == null || $("#id").val() == '' || $("#id").val().length == 0) {
@@ -214,7 +224,7 @@
             } else {
                 $("#iconbox").removeClass("hide");
                 $("#urlbox").removeClass("hide");
-                $("#url").attr("lay-verify", "required");
+                $("#url").attr("lay-verify", "personal");
             }
         }
 
@@ -326,8 +336,7 @@
                            class="layui-input" maxlength="100"
                            onkeyup="this.value=this.value.replace(/[\u4e00-\u9fa5]/g,'')" onpaste="return false"
                            ondragenter="return false" oncontextmenu="return false;" style="ime-mode:disabled"
-                           readonly
-                           lay-verify="required"
+                           lay-verify="personal"
                     >
                 </div>
             </div>
