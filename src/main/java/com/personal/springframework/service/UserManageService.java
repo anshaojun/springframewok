@@ -76,4 +76,21 @@ public class UserManageService extends BaseService<User, UserMapper> {
             throw new ServiceException("内部数据错误");
         }
     }
+
+    @Transactional(readOnly = false)
+    public void batchDelete(String[] ids) {
+        try {
+            for (int i = 0; i < ids.length; i++) {
+                //删除用户角色关联
+                roleMapper.deleteUserRole(ids[i]);
+                super.delete(ids[i]);
+            }
+        } catch (ServiceException se) {
+            se.printStackTrace();
+            throw se;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException("内部数据错误");
+        }
+    }
 }

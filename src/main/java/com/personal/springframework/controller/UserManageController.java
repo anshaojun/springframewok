@@ -109,4 +109,12 @@ public class UserManageController extends AbstractController {
         return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
     }
 
+    @RequiresPermissions(value = {"sys:user:del"})
+    @ResponseBody
+    @RequestMapping("batchDelete")
+    public ResponseResult batchDelete(@RequestParam("ids[]") String[] ids){
+        userManageService.batchDelete(ids);
+        return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
+    }
+
 }

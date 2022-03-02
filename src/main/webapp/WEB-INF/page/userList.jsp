@@ -84,7 +84,7 @@
                 [{
                     type: 'checkbox',
                     width: 50,
-                    style:"margin-top:5px"
+                    style: "margin-top:5px"
                 }, {
                     title: '头像',
                     field: 'portrait',
@@ -151,7 +151,7 @@
                         var valid = frame.sub();
                         if (valid) {
                             var formData = new FormData($(layero).find('iframe').contents().find("form")[0]);
-                            formData.set("passWord",md5(formData.get("passWord")));
+                            formData.set("passWord", md5(formData.get("passWord")));
                             $.ajax({
                                 type: "post",
                                 data: formData,
@@ -178,7 +178,33 @@
                     }
                 });
             } else if (obj.event === 'batchDel') {
-                console.log("删除");
+                var selected = table.checkStatus('layTable').data;
+                if (selected.length == 0) {
+                    layer.alert("请选择至少一条记录", {icon: 0});
+                    return;
+                }
+                parent.layer.confirm("确定删除用户吗？", {icon: 3, btn: ['确定', '取消'], title: '警告'}, function () {
+                    var ids = [];
+                    for (var i = 0; i < selected.length; i++) {
+                        ids.push(selected[i].id);
+                    }
+                    $.ajax({
+                        type: "post",
+                        data: {"ids": ids},
+                        dataType: "json",
+                        async: false,
+                        url: ctx + "/userManage/batchDelete.do",
+                        success: function (result) {
+                            if (result.code == 200) {
+                                parent.layer.msg('删除成功', {icon: 6, shade: [0.3, '#000']}, function () {
+                                    table.reload('layTable', {});
+                                });
+                            } else {
+                                parent.layer.msg(result.msg, {icon: 5, shade: [0.3, '#000']});
+                            }
+                        }
+                    });
+                });
             }
             /*else if(obj.event === 'LAYTABLE_EXCEL'){
                 var formSelect = form.val('searchForm');
