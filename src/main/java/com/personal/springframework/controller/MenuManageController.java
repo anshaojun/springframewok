@@ -58,7 +58,7 @@ public class MenuManageController {
      **/
     @RequestMapping("loadMenu")
     @ResponseBody
-    @RequiresPermissions({"sys:menu:list"})
+    @RequiresPermissions(value = {"sys:menu:list","sys:permission:addmenu"},logical = Logical.OR)
     public Object loadMenu() {
         return menuManageService.loadMenuTree();
     }

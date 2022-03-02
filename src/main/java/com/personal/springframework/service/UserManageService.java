@@ -1,6 +1,7 @@
 package com.personal.springframework.service;
 
 import com.personal.springframework.exception.ServiceException;
+import com.personal.springframework.model.Menu;
 import com.personal.springframework.model.User;
 import com.personal.springframework.repository.RoleMapper;
 import com.personal.springframework.repository.UserMapper;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Base64;
+import java.util.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -92,5 +93,18 @@ public class UserManageService extends BaseService<User, UserMapper> {
             e.printStackTrace();
             throw new ServiceException("内部数据错误");
         }
+    }
+
+    public Object loadUser() {
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (User user : mapper.getByParam(new HashMap<>())) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", user.getId());
+            map.put("title", user.getNickName()+"【"+user.getUserName()+"】");
+            map.put("spread", true);
+            map.put("children", new ArrayList<>());
+            result.add(map);
+        }
+        return result;
     }
 }

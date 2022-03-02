@@ -3,6 +3,7 @@ package com.personal.springframework.controller;
 import com.personal.springframework.model.Menu;
 import com.personal.springframework.model.ResponseResult;
 import com.personal.springframework.model.Role;
+import com.personal.springframework.model.User;
 import com.personal.springframework.model.core.Page;
 import com.personal.springframework.model.enums.BizCodeEnum;
 import com.personal.springframework.model.enums.Permission;
@@ -62,7 +63,7 @@ public class RoleManageController extends AbstractController {
      **/
     @RequestMapping("queryByPage")
     @ResponseBody
-    @RequiresPermissions({"sys:permission:role:list"})
+    @RequiresPermissions({"sys:permission:list"})
     public Page<Role> queryByPage(Role role) {
         return roleManageService.findPage(role);
     }
@@ -75,7 +76,7 @@ public class RoleManageController extends AbstractController {
      * @Param []
      **/
     @RequestMapping("form")
-    @RequiresPermissions(value = {"sys:permission:role:add", "sys:permission:role:edit"}, logical = Logical.OR)
+    @RequiresPermissions(value = {"sys:permission:add", "sys:permission:edit"}, logical = Logical.OR)
     public String form(HttpServletRequest request) {
         List permissions = new ArrayList<>();
         for (Permission p : Permission.values()) {
@@ -93,7 +94,7 @@ public class RoleManageController extends AbstractController {
      * @Param [role]
      **/
     @RequestMapping("save")
-    @RequiresPermissions(value = {"sys:permission:role:add", "sys:permission:role:edit"}, logical = Logical.OR)
+    @RequiresPermissions(value = {"sys:permission:add", "sys:permission:edit"}, logical = Logical.OR)
     @ResponseBody
     public ResponseResult save(@Validated Role role) {
         roleManageService.saveNotExists(role, "role_name", "roleName", "角色名称");
@@ -108,7 +109,7 @@ public class RoleManageController extends AbstractController {
      * @Param
      **/
     @RequestMapping("delete")
-    @RequiresPermissions(value = {"sys:permission:role:del"})
+    @RequiresPermissions(value = {"sys:permission:del"})
     @ResponseBody
     public ResponseResult delete(Role role) {
         roleManageService.delete(role);
@@ -130,19 +131,44 @@ public class RoleManageController extends AbstractController {
 
     /**
      * @Author 安少军
+     * @Description 关联用户
+     * @Date 16:17 2022/3/2
+     * @Param []
+     * @return java.lang.String
+     **/
+    @RequestMapping(value = "roleUser", method = RequestMethod.GET)
+    @RequiresPermissions({"sys:permission:addmenu"})
+    public String roleUserForm() {
+        return "roleUser";
+    }
+
+    /**
+     * @Author 安少军
      * @Description 加载关联菜单
      * @Date 16:09 2022/2/8
      * @Param [role]
      * @return java.lang.String[]
      **/
-    @RequestMapping("getConnected")
+    @RequestMapping("getConnectedMenu")
     @ResponseBody
     @RequiresPermissions({"sys:permission:addmenu"})
-    public String[] getConnected(Role role) {
+    public String[] getConnectedMenu(Role role) {
         List<Menu> menus = role.getMenuList();
         String[] selected = new String[menus.size()];
         for (int i = 0; i < menus.size(); i++) {
             selected[i] = menus.get(i).getId();
+        }
+        return selected;
+    }
+
+    @RequestMapping("getConnectedUser")
+    @ResponseBody
+    @RequiresPermissions({"sys:permission:adduser"})
+    public String[] getConnectedUser(Role role) {
+        List<User> users = role.getUserList();
+        String[] selected = new String[users.size()];
+        for (int i = 0; i < users.size(); i++) {
+            selected[i] = users.get(i).getId();
         }
         return selected;
     }
@@ -159,6 +185,14 @@ public class RoleManageController extends AbstractController {
     @ResponseBody
     public ResponseResult roleMenuSave(@RequestParam("roleId") String roleId, @RequestParam(value = "menuIds[]",required = false) String[] menus) {
         roleManageService.connectRoleMenu(roleId, menus);
+        return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
+    }
+
+    @RequestMapping(value = "roleUser", method = RequestMethod.POST)
+    @RequiresPermissions({"sys:permission:adduser"})
+    @ResponseBody
+    public ResponseResult roleUser(@RequestParam("roleId") String roleId, @RequestParam(value = "userIds[]",required = false) String[] users) {
+        roleManageService.connectRoleUser(roleId, users);
         return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
     }
 }

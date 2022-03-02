@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.personal.springframework.exception.ServiceException;
 import com.personal.springframework.model.Menu;
 import com.personal.springframework.model.Role;
+import com.personal.springframework.model.User;
 import com.personal.springframework.repository.RoleMapper;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -59,6 +60,23 @@ public class RoleManageService extends BaseService<Role, RoleMapper> {
         if (menus != null && menus.length != 0) {
             Lists.partition(Arrays.asList(menus), 50).forEach(g -> {
                 mapper.batchInsertRoleMenu(roleId, g);
+            });
+        }
+    }
+
+    public void connectRoleUser(String roleId, String[] users) {
+        Role role = getById(roleId);
+        if (role == null) {
+            throw new ServiceException("未找到角色");
+        }
+        //先删除，再维护新关系
+        List<User> olds = role.getUserList();
+        Lists.partition(olds, 50).forEach(g -> {
+            mapper.batchDeleteRoleUser(g);
+        });
+        if (users != null && users.length != 0) {
+            Lists.partition(Arrays.asList(users), 50).forEach(g -> {
+                mapper.batchInsertRoleUser(roleId, g);
             });
         }
     }

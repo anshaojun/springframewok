@@ -109,12 +109,26 @@ public class UserManageController extends AbstractController {
         return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
     }
 
+    /**
+     * @Author 安少军
+     * @Description 批量删除
+     * @Date 15:54 2022/3/2
+     * @Param [ids]
+     * @return com.personal.springframework.model.ResponseResult
+     **/
     @RequiresPermissions(value = {"sys:user:del"})
     @ResponseBody
     @RequestMapping("batchDelete")
     public ResponseResult batchDelete(@RequestParam("ids[]") String[] ids){
         userManageService.batchDelete(ids);
         return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
+    }
+
+    @RequestMapping("loadUser")
+    @ResponseBody
+    @RequiresPermissions({"sys:permission:adduser"})
+    public Object loaduser(){
+        return userManageService.loadUser();
     }
 
 }

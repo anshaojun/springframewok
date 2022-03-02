@@ -21,7 +21,7 @@ insert into TBL_CORE_MENU (ID, MENU_NAME, PARENT_ID, PERMISSION, TYPE, URL, ICON
 values ('ee3ca7543c3d497fbc81837190ae56b8', '菜单管理', 'ee3ca7543c3d497fbc81837190ae56b7', 'sys:menu:list', '0', '/menuManage/main.do', 'layui-icon-more', 2, '1');
 
 insert into TBL_CORE_MENU (ID, MENU_NAME, PARENT_ID, PERMISSION, TYPE, URL, ICON, MLEVEL, IS_LEAF)
-values ('ee3ca7543c3d497fbc81837190ae56b9', '权限管理', 'ee3ca7543c3d497fbc81837190ae56b7', 'sys:permission:role:list', '0', '/roleManage/main.do', 'layui-icon-vercode', 2, '1');
+values ('ee3ca7543c3d497fbc81837190ae56b9', '权限管理', 'ee3ca7543c3d497fbc81837190ae56b7', 'sys:permission:list', '0', '/roleManage/main.do', 'layui-icon-vercode', 2, '1');
 
 insert into TBL_CORE_MENU (ID, MENU_NAME, PARENT_ID, PERMISSION, TYPE, URL, ICON, MLEVEL, IS_LEAF)
 values ('E14E1938C09E475D9DE4E0C13C2CE8FA', '添加用户', 'ee3ca7543c3d497fbc81837190ae56b9', 'sys:permission:adduser', '1', null, 'layui-icon-chat', 3, '1');
@@ -54,6 +54,15 @@ insert into TBL_CORE_USER_ROLE (USER_ID, ROLE_ID)
 values ('0', 'admin');
 
 insert into TBL_CORE_ROLE_MENU (ROLE_ID, MENU_ID)
+values ('admin', '7494AA9478D84DF19F92938D6A28E411');
+
+insert into TBL_CORE_ROLE_MENU (ROLE_ID, MENU_ID)
+values ('admin', '073D015C55324B438BFC35EC82FA6E16');
+
+insert into TBL_CORE_ROLE_MENU (ROLE_ID, MENU_ID)
+values ('admin', '4176364B945A4E92A03E6E9C8B629638');
+
+insert into TBL_CORE_ROLE_MENU (ROLE_ID, MENU_ID)
 values ('admin', 'ef3ca7543c3d497fbc81837190a256b2');
 
 insert into TBL_CORE_ROLE_MENU (ROLE_ID, MENU_ID)
@@ -76,6 +85,7 @@ values ('admin', '4DFCC3984A0D4C6492417C0EA75A79E1');
 
 insert into TBL_CORE_ROLE_MENU (ROLE_ID, MENU_ID)
 values ('admin', '6E67AA4F24234B54AB3B4E70EF5C5802');
+
 
 
 

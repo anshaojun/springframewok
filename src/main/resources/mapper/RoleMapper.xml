@@ -36,14 +36,14 @@
           AND r.id = rm.role_id
           AND r.id = #{id,jdbcType=VARCHAR}
     </select>
-    <select id="getUser" parameterType="java.util.Map" resultMap="menuResultMap">
+    <select id="getUser" parameterType="java.util.Map" resultMap="userResultMap">
         SELECT u.id, u.user_name
         FROM tbl_core_user u,
              TBL_CORE_ROLE r,
              tbl_core_user_role ur
         WHERE u.id = ur.user_id
           AND r.id = ur.role_id
-          AND u.id = #{id,jdbcType=VARCHAR}
+          AND r.id = #{id,jdbcType=VARCHAR}
     </select>
     <sql id="baseColumn">
         a.id,
@@ -157,6 +157,16 @@
         )
     </delete>
 
+    <delete id="batchDeleteRoleUser" parameterType="java.util.List">
+        DELETE
+        FROM TBL_CORE_USER_ROLE
+        WHERE user_id IN (
+        <foreach collection="users" index="index" item="user" separator=",">
+            #{user.id,jdbcType=VARCHAR}
+        </foreach>
+        )
+    </delete>
+
     <insert id="batchInsertRoleMenu">
         INSERT INTO TBL_CORE_ROLE_MENU
         (
@@ -164,6 +174,22 @@
         menu_id
         )
         <foreach item="item" index="index" collection="menus" separator="union all">
+            (
+            SELECT
+            #{roleId,jdbcType=VARCHAR},
+            #{item,jdbcType=VARCHAR}
+            FROM DUAL
+            )
+        </foreach>
+    </insert>
+
+    <insert id="batchInsertRoleUser">
+        INSERT INTO TBL_CORE_USER_ROLE
+        (
+        role_ID,
+        user_id
+        )
+        <foreach item="item" index="index" collection="users" separator="union all">
             (
             SELECT
             #{roleId,jdbcType=VARCHAR},

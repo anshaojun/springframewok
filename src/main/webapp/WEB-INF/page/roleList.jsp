@@ -27,7 +27,7 @@
                     <table class="layui-hide" id="layListId" lay-filter="layList"></table>
                     <script type="text/html" id="toolbar">
                         <div class="layui-btn-container">
-                            <shiro:hasPermission name="sys:permission:role:add">
+                            <shiro:hasPermission name="sys:permission:add">
                                 <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="add"><i
                                         class="layui-icon layui-icon-add-1"></i> 新增
                                 </button>
@@ -36,24 +36,24 @@
                     </script>
                     <script type="text/html" id="bar">
                         <div class="layui-btn-group">
-                            <shiro:hasPermission name="sys:permission:role:adduser">
+                            <shiro:hasPermission name="sys:permission:adduser">
                                 <button type="button" class="layui-btn layui-btn-sm layui-btn-checked"
                                         lay-event="addUser">
                                     <i class="layui-icon layui-icon-group"></i>添加用户
                                 </button>
                             </shiro:hasPermission>
-                            <shiro:hasPermission name="sys:permission:role:addmenu">
+                            <shiro:hasPermission name="sys:permission:addmenu">
                                 <button type="button" class="layui-btn layui-btn-sm layui-btn-normal"
                                         lay-event="addMenu">
                                     <i class="layui-icon layui-icon-vercode"></i> 菜单权限
                                 </button>
                             </shiro:hasPermission>
-                            <shiro:hasPermission name="sys:permission:role:edit">
+                            <shiro:hasPermission name="sys:permission:edit">
                                 <button type="button" class="layui-btn layui-btn-sm layui-btn-warm" lay-event="edit">
                                     <i class="layui-icon layui-icon-edit"></i> 修改
                                 </button>
                             </shiro:hasPermission>
-                            <shiro:hasPermission name="sys:permission:role:del">
+                            <shiro:hasPermission name="sys:permission:del">
                                 <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" lay-event="del">
                                     <i class="layui-icon layui-icon-delete"></i> 删除
                                 </button>
@@ -162,11 +162,42 @@
             var data = obj.data; //获得当前行数据
             switch (obj.event) {
                 case 'addUser':
+                    var index = parent.layer.open({
+                        title: "用户选择",
+                        area: ['300px', '700px'],
+                        type: 2,
+                        content: ctx + "/roleManage/roleUser.do?id=" + data.id,
+                        btn: ['确定', '取消'],
+                        yes: function (index, layero) {
+                            //调用
+                            var frame = $(layero).find("iframe")[0].contentWindow;
+                            var checkedData = frame.tree.getChecked('treeId');
+                            var users = getChildNodes(checkedData, []);
+                            $.ajax({
+                                type: "post",
+                                data: {"roleId":data.id,"userIds":users},
+                                dataType: "json",
+                                url: ctx + "/roleManage/roleUser.do",
+                                async: false,
+                                success: function (result) {
+                                    if (result.code == 200) {
+                                        parent.layer.close(index);
+                                        parent.layer.msg('保存成功', {icon: 6, shade: [0.3, '#000']});
+                                    } else {
+                                        parent.layer.msg(result.msg, {icon: 5, shade: [0.3, '#000']});
+                                    }
+                                }
+                            });
+                        },
+                        btn2: function () {
+                            layer.closeAll(index); //关闭当前窗口
+                        }
+                    });
                     break;
                 case 'addMenu':
                     var index = parent.layer.open({
                         title: "菜单权限",
-                        area: ['600px', '450px'],
+                        area: ['300px', '700px'],
                         type: 2,
                         content: ctx + "/roleManage/roleMenu.do?id=" + data.id,
                         btn: ['确定', '取消'],

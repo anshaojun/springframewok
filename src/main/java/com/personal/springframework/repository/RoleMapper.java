@@ -2,6 +2,7 @@ package com.personal.springframework.repository;
 
 import com.personal.springframework.model.Menu;
 import com.personal.springframework.model.Role;
+import com.personal.springframework.model.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -25,4 +26,8 @@ public interface RoleMapper extends BaseMapper<Role> {
     int batchDeleteRoleMenu(@Param("menus") List<Menu> menus);
 
     void batchInsertRoleMenu(@Param("roleId") String roleId,@Param("menus") List<String> menus);
+
+    void batchDeleteRoleUser(@Param("users") List<User> users);
+
+    void batchInsertRoleUser(@Param("roleId") String roleId, @Param("users") List<String> users);
 }
