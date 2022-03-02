@@ -17,6 +17,9 @@
                     javaType="java.util.List"
                     column="{id=id}"
                     select="getUser"/>
+        <!--<association property="agency"
+                     javaType="com.personal.springframework.model.Agency" fetchType="eager"
+                     column="{agencyId=agency_id}" select="getAgency"/>-->
     </resultMap>
     <resultMap id="menuResultMap" type="com.personal.springframework.model.Menu">
         <id column="id" property="id" jdbcType="VARCHAR"/>

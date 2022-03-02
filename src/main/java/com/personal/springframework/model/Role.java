@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,4 +26,6 @@ public class Role extends BaseEntity {
     private List<Menu> menuList;
     //用户
     private List<User> userList;
+    //单位
+    private List<Agency> agencyList = new ArrayList<>();
 }

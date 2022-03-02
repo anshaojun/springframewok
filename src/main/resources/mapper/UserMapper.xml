@@ -11,9 +11,6 @@
         <result column="portrait" property="portrait" jdbcType="CLOB" javaType="java.lang.String"/>
         <result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP"/>
         <result column="last_login_ip" property="lastLoginIp" jdbcType="VARCHAR"/>
-        <!--<association property="agency"
-                     javaType="com.personal.springframework.model.Agency" fetchType="eager"
-                     column="{agencyId=agency_id}" select="getAgency"/>-->
         <collection property="roleList"
                     ofType="com.personal.springframework.model.Role"
                     fetchType="eager"
