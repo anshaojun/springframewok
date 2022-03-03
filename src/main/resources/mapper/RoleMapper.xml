@@ -43,7 +43,7 @@
         SELECT u.id, u.user_name
         FROM tbl_core_user u,
              TBL_CORE_ROLE r,
-             tbl_core_user_role ur
+             TBL_CORE_ROLE_USER ur
         WHERE u.id = ur.user_id
           AND r.id = ur.role_id
           AND r.id = #{id,jdbcType=VARCHAR}
@@ -128,13 +128,13 @@
 
     <delete id="deleteRoleUser" parameterType="java.lang.String">
         DELETE
-        FROM TBL_CORE_USER_ROLE
+        FROM TBL_CORE_ROLE_USER
         WHERE role_id = #{roleId,jdbcType=VARCHAR}
     </delete>
 
     <delete id="deleteUserRole" parameterType="java.lang.String">
         DELETE
-        FROM TBL_CORE_USER_ROLE
+        FROM TBL_CORE_ROLE_USER
         WHERE user_id = #{userId,jdbcType=VARCHAR}
     </delete>
 
@@ -162,7 +162,7 @@
 
     <delete id="batchDeleteRoleUser" parameterType="java.util.List">
         DELETE
-        FROM TBL_CORE_USER_ROLE
+        FROM TBL_CORE_ROLE_USER
         WHERE user_id IN (
         <foreach collection="users" index="index" item="user" separator=",">
             #{user.id,jdbcType=VARCHAR}
@@ -187,7 +187,7 @@
     </insert>
 
     <insert id="batchInsertRoleUser">
-        INSERT INTO TBL_CORE_USER_ROLE
+        INSERT INTO TBL_CORE_ROLE_USER
         (
         role_ID,
         user_id
@@ -201,4 +201,8 @@
             )
         </foreach>
     </insert>
+
+    <delete id="deleteAgencyRole" parameterType="java.lang.String">
+        delete from tbl_core_role_agency where agency_id=#{agencyId,jdbcType=VARCHAR}
+    </delete>
 </mapper>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personal.springframework.repository.AgencyMapper">
+    <resultMap id="baseResultMap" type="com.personal.springframework.model.Agency">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="agency_code" property="agencyCode" jdbcType="VARCHAR"/>
+        <result column="agency_name" property="agencyName" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="mlevel" property="mLevel" jdbcType="VARCHAR"/>
+        <result column="is_leaf" property="isLeaf" jdbcType="VARCHAR"/>
+        <association property="parent" javaType="com.personal.springframework.model.Agency" select="getParent" column="parent_id"/>
+    </resultMap>
+    <resultMap id="treeMap" type="com.personal.springframework.model.Agency">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="agency_code" property="agencyCode" jdbcType="VARCHAR"/>
+        <result column="agency_name" property="agencyName" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="mlevel" property="mLevel" jdbcType="VARCHAR"/>
+        <result column="is_leaf" property="isLeaf" jdbcType="VARCHAR"/>
+        <collection property="child" ofType="com.personal.springframework.model.Agency" column="id"
+                    select="getChild"/>
+    </resultMap>
+
+
+    <sql id="baseColumn">
+        a.id,
+        a.agency_code,
+        a.agency_name,
+        a.type,
+        a.parent_id,
+        a.mlevel,
+        a.is_leaf
+    </sql>
+
+    <select id="loadAgencyTree" resultMap="treeMap">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_AGENCY a
+        where a.parent_id='0'
+    </select>
+
+    <select id="getChild" resultMap="treeMap">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_AGENCY a
+        where a.parent_id=#{id,jdbcType=VARCHAR}
+    </select>
+    <select id="getParent" resultMap="baseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_AGENCY a
+        where a.id=#{parent_id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getByParam" parameterType="java.util.Map" resultMap="baseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_AGENCY a
+        <where>
+            <if test="id!=null and id!=''">
+                and a.id=#{id,jdbcType=VARCHAR}
+            </if>
+            <if test="agencyCode!=null and agencyCode!=''">
+                and a.agency_code=#{agencyCode,jdbcType=VARCHAR}
+            </if>
+            <if test="agencyName!=null and agencyName!=''">
+                and a.agency_name=#{agencyName,jdbcType=VARCHAR}
+            </if>
+            <if test="parent!=null and parent.id!=null and parent.id!=''">
+                and a.parent_id=#{parent.id,jdbcType=VARCHAR}
+            </if>
+            <if test="type!=null and type!=''">
+                and a.type=#{type,jdbcType=VARCHAR}
+            </if>
+            <if test="mLevel!=null and mLevel!=''">
+                and a.mlevel=#{mLevel,jdbcType=VARCHAR}
+            </if>
+            <if test="isLeaf!=null and isLeaf!=''">
+                and a.is_leaf=#{isLeaf,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="getByPage" parameterType="Agency" resultMap="baseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_AGENCY a
+        <where>
+            <if test="id!=null and id!=''">
+                and a.id=#{id,jdbcType=VARCHAR}
+            </if>
+            <if test="agencyCode!=null and agencyCode!=''">
+                and a.agency_code=#{agencyCode,jdbcType=VARCHAR}
+            </if>
+            <if test="agencyName!=null and agencyName!=''">
+                and a.agency_name=#{agencyName,jdbcType=VARCHAR}
+            </if>
+            <if test="parent!=null and parent.id!=null and parent.id!=''">
+                and a.parent_id=#{parent.id,jdbcType=VARCHAR}
+            </if>
+            <if test="type!=null and type!=''">
+                and a.type=#{type,jdbcType=VARCHAR}
+            </if>
+            <if test="mLevel!=null and mLevel!=''">
+                and a.mlevel=#{mLevel,jdbcType=VARCHAR}
+            </if>
+            <if test="isLeaf!=null and isLeaf!=''">
+                and a.is_leaf=#{isLeaf,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="Agency">
+        INSERT INTO TBL_CORE_AGENCY (id,
+                                   agency_code,
+                                   agency_name,
+                                   parent_id,
+                                   type,
+                                   mlevel,
+                                   is_leaf)
+        VALUES (sys_guid(),
+                'A'||lpad(SEQ_AGENCY_CODE.nextval,7,'0'),
+                #{agencyName,jdbcType=VARCHAR},
+                #{parent.id,jdbcType=VARCHAR},
+                #{type,jdbcType=VARCHAR},
+                #{mLevel,jdbcType=VARCHAR},
+                #{isLeaf,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="update" parameterType="Agency">
+        update TBL_CORE_AGENCY
+        <set>
+            <if test="agencyName!=null and agencyName!=''">
+                agency_name=#{agencyName,jdbcType=VARCHAR},
+            </if>
+            <if test="agencyCode!=null and agencyCode!=''">
+                agency_code=#{agencyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="parent!=null and parent.id!=null and parent.id!=''">
+                parent_id=#{parent.id,jdbcType=VARCHAR},
+            </if>
+            <if test="type!=null and type!=''">
+                type=#{type,jdbcType=VARCHAR},
+            </if>
+            <if test="mLevel!=null and mLevel!=''">
+                mlevel=#{mLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="isLeaf!=null and isLeaf!=''">
+                is_leaf=#{isLeaf,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id=#{id,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE
+        FROM TBL_CORE_AGENCY
+        WHERE id = #{id,jdbcType=VARCHAR}
+    </delete>
+
+    <select id="getById" parameterType="java.lang.String" resultMap="baseResultMap">
+        select
+        <include refid="baseColumn"/>
+        from TBL_CORE_AGENCY a
+        where a.id=#{id,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByParent" parameterType="java.lang.String">
+        delete from TBL_CORE_AGENCY where parent_id=#{parentId,jdbcType=VARCHAR}
+    </delete>
+</mapper>

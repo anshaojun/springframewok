@@ -13,7 +13,7 @@
             height: 700px;
         }
 
-        #menu_tree {
+        #agency_tree {
             margin-top: 20px;
             height: 750px;
             overflow: auto;
@@ -21,27 +21,16 @@
 
     </style>
     <link rel="stylesheet" href="${ctx}/js/iconpicker-master/assets/layui/css/layui.css"/>
-    <script src="${ctx}/js/iconpicker-master/module/iconPicker/iconPicker.js"></script>
     <script src="${ctx}/js/iconpicker-master/module/common.js"></script>
     <script>
         $(function () {
-            var iconPicker;
             var form;
             var select;
             var tree;
             //表单提交事件
             layui.use('form', function () {
                 form = layui.form;
-                form.verify({
-                    personal: function (e) {
-                        if (!e) {
-                            return "必填项不能为空";
-                        }
-                        if (e.indexOf("/") == 0) {
-                            return "不能以/开始";
-                        }
-                    }
-                });
+                form.verify({});
                 form.on('submit(formDemo)', function (data) {
                     //新增
                     if ($("#id").val() == null || $("#id").val() == '' || $("#id").val().length == 0) {
@@ -52,23 +41,18 @@
                         }
                         data.field.isLeaf = '1';
                     }
-                    if (data.field.type == '1') {
-                        data.field.icon = "";
-                        data.field.url = "";
-                    }
                     $.ajax({
                         type: "post",
                         data: data.field,
                         dataType: "json",
                         async: false,
-                        url: ctx + "/menuManage/save.do",
+                        url: ctx + "/agencyManage/save.do",
                         success: function (result) {
                             if (result.code == 200) {
                                 parent.layer.msg('保存成功', {icon: 6, shade: [0.3, '#000']}, function () {
                                     $(".layui-form")[0].reset();
-                                    tree.reload('treeId', {url: '', data: loadMenu()});
+                                    tree.reload('treeId', {url: '', data: loadAgency()});
                                     disablededit(false);
-                                    switchdom(true);
                                 });
                             } else {
                                 parent.layer.msg(result.msg, {icon: 5, shade: [0.3, '#000']});
@@ -79,45 +63,16 @@
                 });
                 form.on('radio(type)', function (data) {
                     if (data.value == 1) {
-                        switchdom(true);
                     } else {
-                        switchdom(false);
                     }
                 });
             });
-            //图标选择器
-            layui.use(['iconPicker', 'form', 'layer'], function () {
-                iconPicker = layui.iconPicker,
-                    form = layui.form,
-                    layer = layui.layer,
-                    $ = layui.$;
-                iconPicker.render({
-                    // 选择器，推荐使用input
-                    elem: '#iconPicker',
-                    // 数据类型：fontClass/unicode，推荐使用fontClass
-                    type: 'fontClass',
-                    // 是否开启搜索：true/false，默认true
-                    search: false,
-                    // 是否开启分页：true/false，默认true
-                    page: true,
-                    // 每页显示数量，默认12
-                    limit: 12,
-                    // 点击回调
-                    click: function (data) {
-
-                    },
-                    // 渲染成功后的回调
-                    success: function (d) {
-
-                    }
-                });
-            });
-            //菜单树
+            //单位树
             layui.use(['tree', 'util'], function () {
                 tree = layui.tree;
                 tree.render({
-                    elem: '#menu_tree',
-                    data: loadMenu(),
+                    elem: '#agency_tree',
+                    data: loadAgency(),
                     id: 'treeId',
                     showCheckbox: false,     //是否显示复选框
                     onlyIconControl: true,
@@ -129,36 +84,30 @@
                         var id = obj.data.id;
                         $.ajax({
                             type: "post",
-                            url: ctx + "/menuManage/getMenu.do",
+                            url: ctx + "/agencyManage/getAgency.do",
                             data: {"id": id},
                             dataType: "json",
                             async: false,
-                            success: function (menu) {
-                                if (menu != null) {
-                                    select = menu;
-                                    $("#menuName").val(menu.menuName);
-                                    if (menu.parent != null) {
-                                        $("#parentId").val(menu.parent.id);
-                                        $("#parentName").val(menu.parent.menuName);
+                            success: function (agency) {
+                                if (agency != null) {
+                                    select = agency;
+                                    $("#agencyName").val(agency.agencyName);
+                                    $("#agencyCode").val(agency.agencyCode);
+                                    if (agency.parent != null) {
+                                        $("#parentId").val(agency.parent.id);
+                                        $("#parentName").val(agency.parent.agencyName);
                                     } else {
                                         $("#parentId").val("");
                                         $("#parentName").val("");
                                     }
-                                    $("#permission").val(menu.permission);
-                                    $("#url").val(menu.url);
-                                    $("#id").val(menu.id);
-                                    if (menu.icon != null) {
-                                        iconPicker.checkIcon('iconPicker', menu.icon);
-                                    }
-                                    if (menu.type == '1') {
+                                    $("#id").val(agency.id);
+                                    if (agency.type == '1') {
                                         $("input[name=type][value='1']").prop("checked", true);
-                                        switchdom(true);
                                     } else {
                                         $("input[name=type][value='0']").prop("checked", true);
-                                        switchdom(false);
                                     }
 
-                                    if (menu.isLeaf == '1') {
+                                    if (agency.isLeaf == '1') {
                                         $("input[name=isLeaf][value='1']").prop("checked", true);
                                     } else {
                                         $("input[name=isLeaf][value='0']").prop("checked", true);
@@ -170,35 +119,33 @@
                     }
                 });
             });
-            $("#addMenu").click(function () {
+            $("#addAgency").click(function () {
                 $(".layui-form")[0].reset();
                 disablededit(true);
-                switchdom(true);
                 $("#id").val("");
                 if (select != null) {
                     $("#parentId").val(select.id);
-                    $("#parentName").val(select.menuName);
+                    $("#parentName").val(select.agencyName);
                 }
             });
-            $("#delMenu").click(function () {
+            $("#delAgency").click(function () {
                 if (select == null) {
-                    parent.layer.msg('请选择一个菜单进行删除', {icon: 5, shade: [0.3, '#000']});
+                    parent.layer.msg('请选择一个单位进行删除', {icon: 5, shade: [0.3, '#000']});
                 } else {
-                    parent.layer.confirm("确定删除菜单吗？", {icon: 3, btn: ['确定', '取消'], title: '警告'}, function () {
+                    parent.layer.confirm("确定删除单位吗？", {icon: 3, btn: ['确定', '取消'], title: '警告'}, function () {
                         $.ajax({
                             type: "post",
                             data: {"id": select.id},
                             dataType: "json",
                             async: false,
-                            url: ctx + "/menuManage/del.do",
+                            url: ctx + "/agencyManage/del.do",
                             success: function (result) {
                                 if (result.code == 200) {
                                     parent.layer.msg('删除成功', {icon: 6, shade: [0.3, '#000']}, function () {
                                         select = null;
                                         $(".layui-form")[0].reset();
-                                        tree.reload('treeId', {url: '', data: loadMenu()});
+                                        tree.reload('treeId', {url: '', data: loadAgency()});
                                         disablededit(false);
-                                        switchdom(true);
                                     });
                                 } else {
                                     parent.layer.msg(result.msg, {icon: 5, shade: [0.3, '#000']});
@@ -208,32 +155,21 @@
                     });
                 }
             });
-            $("#editMenu").click(function () {
+            $("#editAgency").click(function () {
                 if (select == null) {
-                    parent.layer.msg('请选择一个菜单进行修改', {icon: 5, shade: [0.3, '#000']});
+                    parent.layer.msg('请选择一个单位进行修改', {icon: 5, shade: [0.3, '#000']});
                 } else {
                     disablededit(true);
                 }
             });
         });
 
-        function switchdom(flag) {
-            if (flag) {
-                $("#iconbox").addClass("hide");
-                $("#urlbox").addClass("hide");
-                $("#url").removeAttr("lay-verify");
-            } else {
-                $("#iconbox").removeClass("hide");
-                $("#urlbox").removeClass("hide");
-                $("#url").attr("lay-verify", "personal");
-            }
-        }
 
         function disablededit(flag) {
             if (flag) {
                 $("#operation").removeClass("hide");
                 $("form input").each(function (i, o) {
-                    if ($(o).attr("id") != 'parentName'&&$(o).attr("name") !='isLeaf') {
+                    if ($(o).attr("id") != 'parentName' && $(o).attr("id") != 'agencyCode' && $(o).attr("name") != 'isLeaf') {
                         $(o).removeAttr("disabled");
                     }
                 });
@@ -249,13 +185,13 @@
             }
         }
 
-        function loadMenu() {
+        function loadAgency() {
             var data = [];
             $.ajax({
                 type: "post",
                 dataType: "json",
                 async: false,
-                url: ctx + "/menuManage/loadMenu.do",
+                url: ctx + "/agencyManage/loadAgency.do",
                 success: function (result) {
                     data = result;
                 }
@@ -268,80 +204,60 @@
 <body>
 <div id="dept_main" style="margin-right: 2%;">
     <fieldset class="layui-elem-field layui-field-box">
-        <legend>菜单树</legend>
-        <shiro:hasPermission name="sys:menu:add">
-            <button id="addMenu" class="layui-btn layui-btn-sm  layui-btn-normal" lay-demo="addMenu"><i
-                    class="layui-icon layui-icon-add-1"></i>添加下级菜单
+        <legend>单位树</legend>
+        <shiro:hasPermission name="sys:agency:add">
+            <button id="addAgency" class="layui-btn layui-btn-sm  layui-btn-normal" lay-demo="addAgency"><i
+                    class="layui-icon layui-icon-add-1"></i>添加下级单位
             </button>
         </shiro:hasPermission>
-        <shiro:hasPermission name="sys:menu:edit">
-            <button id="editMenu" class="layui-btn layui-btn-sm layui-btn-checked" lay-demo="addMenu"><i
+        <shiro:hasPermission name="sys:agency:edit">
+            <button id="editAgency" class="layui-btn layui-btn-sm layui-btn-checked" lay-demo="addAgency"><i
                     class="layui-icon layui-icon-edit"></i>修改
             </button>
         </shiro:hasPermission>
-        <shiro:hasPermission name="sys:menu:del">
-            <button id="delMenu" class="layui-btn layui-btn-sm layui-btn-danger" lay-demo="delMenu"><i
+        <shiro:hasPermission name="sys:agency:del">
+            <button id="delAgency" class="layui-btn layui-btn-sm layui-btn-danger" lay-demo="delAgency"><i
                     class="layui-icon layui-icon-delete"></i>删除
             </button>
         </shiro:hasPermission>
-        <div id="menu_tree"></div>
+        <div id="agency_tree"></div>
     </fieldset>
 </div>
 <div id="dept_particulars">
     <fieldset class="layui-elem-field layui-field-box">
-        <legend>菜单详情</legend>
+        <legend>单位详情</legend>
         <form class="layui-form" action="" onsubmit="return false">
             <input id="id" type="text" name="id" style="display: none">
             <div class="layui-form-item">
-                <label class="layui-form-label"><font color="red">*</font>菜单名</label>
+                <label class="layui-form-label"><font color="red">*</font>单位编码</label>
                 <div class="layui-input-block">
-                    <input id="menuName" type="text" name="menuName" required lay-verify="required"
-                           placeholder="请输入输入框内容"
-                           autocomplete="off" class="layui-input" maxlength="10" disabled>
+                    <input id="agencyCode" type="text" name="agencyCode"
+                           placeholder="自动生成"
+                           autocomplete="off" class="layui-input" disabled>
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">父菜单</label>
+                <label class="layui-form-label"><font color="red">*</font>单位名称</label>
+                <div class="layui-input-block">
+                    <input id="agencyName" type="text" name="agencyName" required lay-verify="required"
+                           placeholder="请输入输入框内容"
+                           autocomplete="off" class="layui-input" maxlength="40" disabled>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">父单位</label>
                 <div class="layui-input-block">
                     <input id="parentName" type="text" placeholder="请输入输入框内容" autocomplete="off" class="layui-input"
                            disabled>
                     <input id="parentId" type="text" style="display: none" name="parent.id" autocomplete="off">
                 </div>
             </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label"><font color="red">*</font>权限标识</label>
-                <div class="layui-input-block">
-                    <input id="permission" type="text" name="permission" required lay-verify="required"
-                           placeholder="请输入输入框内容"
-                           autocomplete="off" class="layui-input" maxlength="60"
-                           onkeyup="this.value=this.value.replace(/[\u4e00-\u9fa5]/g,'')" onpaste="return false"
-                           ondragenter="return false" oncontextmenu="return false;" style="ime-mode:disabled"
-                           disabled
-                    >
-                </div>
-            </div>
+
             <div class="layui-form-item">
                 <label class="layui-form-label"><font color="red">*</font>类型</label>
                 <div class="layui-input-block">
-                    <input name="type" value="1" type="radio" title="按钮" checked="" lay-filter="type" disabled>
-                    <input name="type" value="0" type="radio" title="菜单" lay-filter="type" disabled>
-                </div>
-            </div>
-            <div class="layui-form-item hide" id="urlbox">
-                <label class="layui-form-label"><font color="red">*</font>访问地址</label>
-                <div class="layui-input-block">
-                    <input id="url" type="text" name="url" placeholder="请输入输入框内容" autocomplete="off"
-                           class="layui-input" maxlength="100"
-                           onkeyup="this.value=this.value.replace(/[\u4e00-\u9fa5]/g,'')" onpaste="return false"
-                           ondragenter="return false" oncontextmenu="return false;" style="ime-mode:disabled"
-                           lay-verify="personal"
-                    >
-                </div>
-            </div>
-            <div class="layui-form-item hide" id="iconbox">
-                <label class="layui-form-label"><font color="red">*</font>图标</label>
-                <div class="layui-input-block">
-                    <input id="iconPicker" name="icon" lay-filter="iconPicker">
+                    <input name="type" value="1" type="radio" title="单位" checked="" lay-filter="type" disabled>
+                    <input name="type" value="0" type="radio" title="部门" lay-filter="type" disabled>
                 </div>
             </div>
             <div class="layui-form-item">

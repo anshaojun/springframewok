@@ -3,6 +3,9 @@ package com.personal.springframework.model;
 import com.personal.springframework.model.core.BaseEntity;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @program: springframework
  * @description: 单位
@@ -11,11 +14,12 @@ import lombok.Data;
  **/
 @Data
 public class Agency extends BaseEntity {
-    private String agencyId;
     private String agencyCode;
     private String agencyName;
     private String parentId;
-    private Integer isLeaf;
-    private String level;
+    private String isLeaf;
+    private String mLevel;
     private String type;
+    private Agency parent;
+    private List<Agency> child = new ArrayList<>();
 }

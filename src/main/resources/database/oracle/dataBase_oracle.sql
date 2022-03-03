@@ -88,17 +88,17 @@ comment on column TBL_CORE_ROLE.role_name
 alter table TBL_CORE_ROLE
     add constraint PK_TBL_CORE_ROLE primary key (id);
 create unique index IDX_TBL_CORE_ROLE_1 on TBL_CORE_ROLE (ROLE_NAME);
-create table TBL_CORE_USER_ROLE
+create table TBL_CORE_ROLE_USER
 (
     user_id VARCHAR2(32),
     role_id VARCHAR2(32)
 );
 -- Add comments to the columns
-comment on column TBL_CORE_USER_ROLE.user_id
+comment on column TBL_CORE_ROLE_USER.user_id
     is '用户id';
-comment on column TBL_CORE_USER_ROLE.role_id
+comment on column TBL_CORE_ROLE_USER.role_id
     is '角色id';
-create unique index IDX_TBL_USER_ROLE on TBL_CORE_USER_ROLE (USER_ID, ROLE_ID);
+create unique index IDX_TBL_ROLE_USER on TBL_CORE_ROLE_USER (USER_ID, ROLE_ID);
 
 -- Create table
 create table TBL_CORE_ROLE_MENU
@@ -112,4 +112,57 @@ comment on column TBL_CORE_ROLE_MENU.role_id
 comment on column TBL_CORE_ROLE_MENU.menu_id
     is '菜单id';
 -- Create/Recreate indexes
-create unique index IDX_TBL_CORE_USER_ROLE on TBL_CORE_ROLE_MENU (ROLE_ID, MENU_ID);
+create unique index IDX_TBL_CORE_ROLE_MENU on TBL_CORE_ROLE_MENU (ROLE_ID, MENU_ID);
+
+-- Create table
+create table TBL_CORE_AGENCY
+(
+    id          VARCHAR2(32) not null,
+    agency_code VARCHAR2(15) not null,
+    agency_name VARCHAR2(120) not null,
+    type        VARCHAR2(1) not null,
+    parent_id   VARCHAR2(32) not null,
+    mlevel      NUMBER(1) not null,
+    is_leaf     VARCHAR2(1)
+)
+    tablespace USERS
+    pctfree 10
+    initrans 1
+    maxtrans 255;
+-- Add comments to the table
+comment on table TBL_CORE_AGENCY
+    is '单位表';
+-- Add comments to the columns
+comment on column TBL_CORE_AGENCY.id
+    is 'id';
+comment on column TBL_CORE_AGENCY.agency_code
+    is '单位编码';
+comment on column TBL_CORE_AGENCY.agency_name
+    is '单位名称';
+comment on column TBL_CORE_AGENCY.type
+    is '种类，1单位，2部门';
+comment on column TBL_CORE_AGENCY.parent_id
+    is '父菜单';
+comment on column TBL_CORE_AGENCY.mlevel
+    is '等级';
+comment on column TBL_CORE_AGENCY.is_leaf
+    is '是否底级';
+-- Create/Recreate indexes
+create unique index IDX_TBL_CORE_AGENCY on TBL_CORE_AGENCY (AGENCY_CODE);
+-- Create/Recreate primary, unique and foreign key constraints
+alter table TBL_CORE_AGENCY
+    add constraint TBL_CORE_AGENCY_PK primary key (ID);
+
+-- Create table
+create table TBL_CORE_ROLE_AGENCY
+(
+    agency_id VARCHAR2(32),
+    role_id VARCHAR2(32)
+);
+-- Add comments to the columns
+comment on column TBL_CORE_ROLE_AGENCY.agency_id
+    is '单位id';
+comment on column TBL_CORE_ROLE_AGENCY.role_id
+    is '角色id';
+-- Create/Recreate indexes
+create unique index IDX_TBL_ROLE_AGENCY on TBL_CORE_ROLE_AGENCY (AGENCY_ID, ROLE_ID);

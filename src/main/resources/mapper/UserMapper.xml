@@ -41,7 +41,7 @@
         SELECT r.id, r.role_name
         FROM TBL_CORE_USER u,
              TBL_CORE_ROLE r,
-             TBL_CORE_USER_ROLE ur
+             TBL_CORE_ROLE_USER ur
         WHERE u.id = ur.user_id
           AND r.id = ur.role_id
           AND u.id = #{id,jdbcType=VARCHAR}
