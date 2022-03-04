@@ -16,4 +16,6 @@ public interface AgencyMapper extends BaseMapper<Agency>{
     List<Agency> loadAgencyTree();
 
     int deleteByParent(@Param("parentId") String parentId);
+
+    List<Agency> getAgenciesByParent(@Param("agencyId") String agencyId);
 }

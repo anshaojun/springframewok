@@ -30,10 +30,10 @@
             if (treeNode[i].children.length == 0) {
                 result.push(treeNode[i].id);
             } else {
-                if(excludeParent){
+                if (excludeParent) {
                     result.push(treeNode[i].id);
                 }
-                result = getChildNodes(treeNode[i].children, result);
+                result = getChildNodes(treeNode[i].children, result, excludeParent);
             }
         }
         return result;

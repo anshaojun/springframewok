@@ -9,7 +9,7 @@ package com.personal.springframework.model.enums;
 public enum Permission {
     SUCCESS("1", "所有数据"),
     SERVICE_EXCEPTION("2", "本单位数据"),
-    INNER_EXCEPTION("3", "指定单位数据");
+    INNER_EXCEPTION("3", "本单位及下级单位数据");
 
     private String code;
     private String name;

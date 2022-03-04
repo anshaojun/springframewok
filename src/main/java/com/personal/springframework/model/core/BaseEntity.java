@@ -21,4 +21,6 @@ public class BaseEntity extends Page {
             return true;
         }
     }
+
+    private String dataScope;
 }

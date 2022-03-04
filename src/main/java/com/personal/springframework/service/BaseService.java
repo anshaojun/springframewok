@@ -3,16 +3,25 @@ package com.personal.springframework.service;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.google.common.collect.Lists;
+import com.personal.springframework.constant.RoleOptions;
 import com.personal.springframework.exception.ServiceException;
+import com.personal.springframework.model.Agency;
+import com.personal.springframework.model.Role;
 import com.personal.springframework.model.core.BaseEntity;
 import com.personal.springframework.model.core.Page;
+import com.personal.springframework.repository.AgencyMapper;
 import com.personal.springframework.repository.BaseMapper;
+import com.personal.springframework.repository.RoleMapper;
+import com.personal.springframework.util.UserUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @program: springframework
@@ -25,6 +34,60 @@ public abstract class BaseService<T extends BaseEntity, M extends BaseMapper<T>>
     //使用@Autowired自动装配
     @Autowired(required = false)
     protected M mapper;
+
+    @Autowired
+    private RoleMapper roleMapper;
+    @Autowired
+    private AgencyMapper agencyMapper;
+
+    /**
+     * @return java.lang.String
+     * @Author 安少军
+     * @Description 单位数据权限过滤
+     * @Date 15:10 2022/3/4
+     * @Param [targetTableAlies, targetTableColumn]
+     **/
+    protected String getDataScope(String targetTableAlies, String targetTableColumn) {
+        List<Role> roles = UserUtil.getLoginUser().getRoleList();
+        StringBuffer sql = new StringBuffer();
+        Set<String> agencies = new LinkedHashSet<>();
+        for (Role r : roles) {
+            Role role = roleMapper.getById(r.getId());
+            //存在所有数据权限
+            if (role.getPermission().equals(RoleOptions.ALLDATA.getId())) {
+                return "";
+            }
+            if (role.getPermission().equals(RoleOptions.OWNDATA.getId())) {
+                Agency agency = role.getAgency();
+                if (agency != null) {
+                    agencies.add(agency.getId());
+                }
+            }
+            if (role.getPermission().equals(RoleOptions.CHILD.getId())) {
+                Agency agency = role.getAgency();
+                if (agency != null) {
+                    List<Agency> childs = agencyMapper.getAgenciesByParent(agency.getId());
+                    childs.forEach(c -> {
+                        agencies.add(c.getId());
+                    });
+                }
+            }
+        }
+        if (agencies.size() > 1000) {
+            throw new ServiceException("当前用户权限冗余");
+        }
+        sql.append(" and " + targetTableAlies + "." + targetTableColumn + " in( ");
+        int i = 1;
+        for (String agencyId : agencies) {
+            sql.append("'").append(agencyId).append("'");
+            if (i != agencies.size()) {
+                sql.append(",");
+            }
+            i++;
+        }
+        sql.append(" ) ");
+        return sql.toString();
+    }
 
     @Transactional(readOnly = true)
     public Page<T> findPage(T clazz) {
@@ -48,9 +111,9 @@ public abstract class BaseService<T extends BaseEntity, M extends BaseMapper<T>>
 
     @Transactional(readOnly = false)
     public void save(T clazz) {
-        if(clazz.isNew()){
+        if (clazz.isNew()) {
             mapper.insert(clazz);
-        }else{
+        } else {
             mapper.update(clazz);
         }
     }
@@ -89,9 +152,9 @@ public abstract class BaseService<T extends BaseEntity, M extends BaseMapper<T>>
     }
 
     @Transactional(readOnly = false)
-    public void batchDelete(List<T> deletes){
-        List<List<T>> groups = Lists.partition(deletes,50);
-        groups.forEach(l->{
+    public void batchDelete(List<T> deletes) {
+        List<List<T>> groups = Lists.partition(deletes, 50);
+        groups.forEach(l -> {
             mapper.batchDelete(l);
         });
     }

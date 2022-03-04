@@ -7,6 +7,9 @@ package com.personal.springframework.constant;
  * @create: 2022-01-10 15:39
  **/
 public enum RoleOptions {
+    ALLDATA("1", "所有数据"),
+    OWNDATA("2", "本单位数据"),
+    CHILD("3", "本单位及下级单位"),
     DEFAULT("default", "普通用户"),
     ADMIN("admin", "超级管理员");
     private final String id;

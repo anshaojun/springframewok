@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.personal.springframework.repository.AgencyMapper">
+    <resultMap id="ResultMap" type="com.personal.springframework.model.Agency">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="agency_code" property="agencyCode" jdbcType="VARCHAR"/>
+        <result column="agency_name" property="agencyName" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="mlevel" property="mLevel" jdbcType="VARCHAR"/>
+        <result column="is_leaf" property="isLeaf" jdbcType="VARCHAR"/>
+    </resultMap>
     <resultMap id="baseResultMap" type="com.personal.springframework.model.Agency">
         <id column="id" property="id" jdbcType="VARCHAR"/>
         <result column="agency_code" property="agencyCode" jdbcType="VARCHAR"/>
@@ -8,7 +16,8 @@
         <result column="type" property="type" jdbcType="VARCHAR"/>
         <result column="mlevel" property="mLevel" jdbcType="VARCHAR"/>
         <result column="is_leaf" property="isLeaf" jdbcType="VARCHAR"/>
-        <association property="parent" javaType="com.personal.springframework.model.Agency" select="getParent" column="parent_id"/>
+        <association property="parent" javaType="com.personal.springframework.model.Agency" select="getParent"
+                     column="parent_id"/>
     </resultMap>
     <resultMap id="treeMap" type="com.personal.springframework.model.Agency">
         <id column="id" property="id" jdbcType="VARCHAR"/>
@@ -112,14 +121,14 @@
 
     <insert id="insert" parameterType="Agency">
         INSERT INTO TBL_CORE_AGENCY (id,
-                                   agency_code,
-                                   agency_name,
-                                   parent_id,
-                                   type,
-                                   mlevel,
-                                   is_leaf)
-        VALUES (sys_guid(),
-                'A'||lpad(SEQ_AGENCY_CODE.nextval,7,'0'),
+                                     agency_code,
+                                     agency_name,
+                                     parent_id,
+                                     type,
+                                     mlevel,
+                                     is_leaf)
+        VALUES (SYS_GUID(),
+                'A' || LPAD(SEQ_AGENCY_CODE.nextval, 7, '0'),
                 #{agencyName,jdbcType=VARCHAR},
                 #{parent.id,jdbcType=VARCHAR},
                 #{type,jdbcType=VARCHAR},
@@ -166,6 +175,14 @@
     </select>
 
     <delete id="deleteByParent" parameterType="java.lang.String">
-        delete from TBL_CORE_AGENCY where parent_id=#{parentId,jdbcType=VARCHAR}
+        DELETE
+        FROM TBL_CORE_AGENCY
+        WHERE parent_id = #{parentId,jdbcType=VARCHAR}
     </delete>
+
+    <select id="getAgenciesByParent" parameterType="java.lang.String" resultMap="ResultMap" >
+        select
+        <include refid="baseColumn"/>
+        from tbl_core_agency a start with parent_id=#{agencyId,jdbcType=VARCHAR} connect by prior id=parent_id
+    </select>
 </mapper>

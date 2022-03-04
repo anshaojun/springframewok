@@ -19,26 +19,13 @@
                     select="getRole"/>
     </resultMap>
 
-    <resultMap id="agencyResultMap" type="com.personal.springframework.model.Agency">
-        <id column="agency_id" property="agencyId"/>
-        <result column="agency_code" property="agencyCode" jdbcType="VARCHAR"/>
-        <result column="agency_name" property="agencyName" jdbcType="VARCHAR"/>
-        <result column="parent_id" property="parentId" jdbcType="VARCHAR"/>
-        <result column="is_leaf" property="isLeaf" jdbcType="INTEGER"/>
-        <result column="level" property="mLevel" jdbcType="VARCHAR"/>
-        <result column="type" property="type" jdbcType="VARCHAR"/>
-    </resultMap>
     <resultMap id="roleResultMap" type="com.personal.springframework.model.Role">
         <id column="id" property="id" jdbcType="VARCHAR"/>
         <result column="role_name" property="roleName" jdbcType="VARCHAR"/>
+        <result column="permission" property="permission" jdbcType="VARCHAR"/>
     </resultMap>
-    <select id="getAgency" parameterType="java.util.Map" resultMap="agencyResultMap">
-        SELECT a.id, a.agency_code, a.agency_name, a.parent_id
-        FROM tbl_core_agency a
-        WHERE a.id = #{agencyId,jdbcType=VARCHAR}
-    </select>
     <select id="getRole" parameterType="java.util.Map" resultMap="roleResultMap">
-        SELECT r.id, r.role_name
+        SELECT r.id, r.role_name,r.PERMISSION
         FROM TBL_CORE_USER u,
              TBL_CORE_ROLE r,
              TBL_CORE_ROLE_USER ur
