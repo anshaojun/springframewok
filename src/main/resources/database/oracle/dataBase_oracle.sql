@@ -166,3 +166,6 @@ comment on column TBL_CORE_ROLE_AGENCY.role_id
     is '角色id';
 -- Create/Recreate indexes
 create unique index IDX_TBL_ROLE_AGENCY on TBL_CORE_ROLE_AGENCY (AGENCY_ID, ROLE_ID);
+
+-- Create sequence
+CREATE SEQUENCE seq_agency_code MINVALUE 1 MAXVALUE 9999999 START WITH 1 INCREMENT BY 1 CACHE 10;
