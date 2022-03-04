@@ -25,7 +25,7 @@
         <result column="agency_name" property="agencyName" jdbcType="VARCHAR"/>
         <result column="parent_id" property="parentId" jdbcType="VARCHAR"/>
         <result column="is_leaf" property="isLeaf" jdbcType="INTEGER"/>
-        <result column="level" property="level" jdbcType="VARCHAR"/>
+        <result column="level" property="mLevel" jdbcType="VARCHAR"/>
         <result column="type" property="type" jdbcType="VARCHAR"/>
     </resultMap>
     <resultMap id="roleResultMap" type="com.personal.springframework.model.Role">
@@ -33,9 +33,9 @@
         <result column="role_name" property="roleName" jdbcType="VARCHAR"/>
     </resultMap>
     <select id="getAgency" parameterType="java.util.Map" resultMap="agencyResultMap">
-        SELECT a.agency_id, a.agency_code, a.agency_name, a.parent_id
+        SELECT a.id, a.agency_code, a.agency_name, a.parent_id
         FROM tbl_core_agency a
-        WHERE a.agency_id = #{agencyId,jdbcType=VARCHAR}
+        WHERE a.id = #{agencyId,jdbcType=VARCHAR}
     </select>
     <select id="getRole" parameterType="java.util.Map" resultMap="roleResultMap">
         SELECT r.id, r.role_name

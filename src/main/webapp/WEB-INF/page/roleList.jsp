@@ -48,6 +48,12 @@
                                     <i class="layui-icon layui-icon-vercode"></i> 菜单权限
                                 </button>
                             </shiro:hasPermission>
+                            <shiro:hasPermission name="sys:permission:addagency">
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-normal"
+                                        lay-event="addAgency">
+                                    <i class="layui-icon layui-icon-vercode"></i> 单位权限
+                                </button>
+                            </shiro:hasPermission>
                             <shiro:hasPermission name="sys:permission:edit">
                                 <button type="button" class="layui-btn layui-btn-sm layui-btn-warm" lay-event="edit">
                                     <i class="layui-icon layui-icon-edit"></i> 修改
@@ -86,13 +92,13 @@
                 }, {
                     field: 'roleName',
                     title: '角色名称',
-                    width: '75%',
+                    width: '65%',
                     sort: true
                 }, {
                     title: '操作',
                     align: 'center',
                     toolbar: '#bar',
-                    width: '25%'
+                    width: '35%'
                 }]
             ],
             parseData: function (res) { //res 即为原始返回的数据
@@ -175,7 +181,7 @@
                             var users = getChildNodes(checkedData, []);
                             $.ajax({
                                 type: "post",
-                                data: {"roleId":data.id,"userIds":users},
+                                data: {"roleId": data.id, "userIds": users},
                                 dataType: "json",
                                 url: ctx + "/roleManage/roleUser.do",
                                 async: false,
@@ -205,12 +211,50 @@
                             //调用
                             var frame = $(layero).find("iframe")[0].contentWindow;
                             var checkedData = frame.tree.getChecked('treeId');
-                            var menus = getChildNodes(checkedData, []);
+                            var menus = getChildNodes(checkedData, [], true);
                             $.ajax({
                                 type: "post",
-                                data: {"roleId":data.id,"menuIds":menus},
+                                data: {"roleId": data.id, "menuIds": menus},
                                 dataType: "json",
                                 url: ctx + "/roleManage/roleMenu.do",
+                                async: false,
+                                success: function (result) {
+                                    if (result.code == 200) {
+                                        parent.layer.close(index);
+                                        parent.layer.msg('保存成功', {icon: 6, shade: [0.3, '#000']});
+                                    } else {
+                                        parent.layer.msg(result.msg, {icon: 5, shade: [0.3, '#000']});
+                                    }
+                                }
+                            });
+                        },
+                        btn2: function () {
+                            layer.closeAll(index); //关闭当前窗口
+                        }
+                    });
+                    break;
+                case 'addAgency':
+                    var index = parent.layer.open({
+                        title: "单位权限",
+                        area: ['400px', '700px'],
+                        type: 2,
+                        content: ctx + "/roleManage/roleAgency.do?id=" + data.id,
+                        btn: ['确定', '取消'],
+                        yes: function (index, layero) {
+                            //调用
+                            var frame = $(layero).find("iframe")[0].contentWindow;
+                            var agencys = new Array();
+                            var agencyId = frame.agencyId;
+                            if(agencyId==null||agencyId.length==0){
+                                parent.layer.msg('请选择一个单位', {icon: 5, shade: [0.3, '#000']});
+                                return;
+                            }
+                            agencys.push(agencyId);
+                            $.ajax({
+                                type: "post",
+                                data: {"roleId": data.id, "agencyIds": agencys},
+                                dataType: "json",
+                                url: ctx + "/roleManage/roleAgency.do",
                                 async: false,
                                 success: function (result) {
                                     if (result.code == 200) {

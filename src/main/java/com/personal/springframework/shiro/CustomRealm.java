@@ -37,9 +37,7 @@ public class CustomRealm extends AuthorizingRealm {
         for (Menu menu : menus) {
             if (StringUtils.isNotBlank(menu.getPermission())) {
                 // 添加基于Permission的权限信息
-                for (String permission : StringUtils.split(menu.getPermission(), ",")) {
-                    simpleAuthorizationInfo.addStringPermission(permission);
-                }
+                simpleAuthorizationInfo.addStringPermission(menu.getPermission());
             }
             if(CollectionUtil.isNotEmpty(menu.getChild())){
                 doAuthorization(simpleAuthorizationInfo,menu.getChild());

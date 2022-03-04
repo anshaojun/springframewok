@@ -63,9 +63,9 @@
         select
         <include refid="baseColumn"/>
         from TBL_CORE_MENU a
-        <if test="id!=null">
+        <if test="roleId!=null and roleId!=''">
             inner join tbl_core_role_menu r
-            on r.id=#{id,jdbcType=VARCHAR} and r.id=a.id
+            on r.ROLE_ID=#{roleId,jdbcType=VARCHAR} and r.MENU_ID=a.id
         </if>
         <where>
             <if test="id!=null and id!=''">

@@ -53,10 +53,7 @@ public class RoleManageService extends BaseService<Role, RoleMapper> {
             throw new ServiceException("未找到角色");
         }
         //先删除，再维护新关系
-        List<Menu> olds = role.getMenuList();
-        Lists.partition(olds, 50).forEach(g -> {
-            mapper.batchDeleteRoleMenu(g);
-        });
+        mapper.deleteRoleMenu(roleId);
         if (menus != null && menus.length != 0) {
             Lists.partition(Arrays.asList(menus), 50).forEach(g -> {
                 mapper.batchInsertRoleMenu(roleId, g);
@@ -70,13 +67,24 @@ public class RoleManageService extends BaseService<Role, RoleMapper> {
             throw new ServiceException("未找到角色");
         }
         //先删除，再维护新关系
-        List<User> olds = role.getUserList();
-        Lists.partition(olds, 50).forEach(g -> {
-            mapper.batchDeleteRoleUser(g);
-        });
+        mapper.deleteRoleUser(roleId);
         if (users != null && users.length != 0) {
             Lists.partition(Arrays.asList(users), 50).forEach(g -> {
                 mapper.batchInsertRoleUser(roleId, g);
+            });
+        }
+    }
+    @Transactional(readOnly = false)
+    public void connectRoleAgency(String roleId, String[] agencys) {
+        Role role = getById(roleId);
+        if (role == null) {
+            throw new ServiceException("未找到角色");
+        }
+        //先删除，再维护新关系
+        mapper.deleteRoleAgency(roleId);
+        if (agencys != null && agencys.length != 0) {
+            Lists.partition(Arrays.asList(agencys), 50).forEach(g -> {
+                mapper.batchInsertRoleAgency(roleId, g);
             });
         }
     }

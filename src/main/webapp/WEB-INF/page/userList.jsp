@@ -180,7 +180,7 @@
             } else if (obj.event === 'batchDel') {
                 var selected = table.checkStatus('layTable').data;
                 if (selected.length == 0) {
-                    layer.alert("请选择至少一条记录", {icon: 0});
+                    parent.layer.msg('请选择至少一条记录', {icon: 5, shade: [0.3, '#000']});
                     return;
                 }
                 parent.layer.confirm("确定删除用户吗？", {icon: 3, btn: ['确定', '取消'], title: '警告'}, function () {

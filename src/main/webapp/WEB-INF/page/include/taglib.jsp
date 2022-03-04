@@ -25,12 +25,14 @@
     var ctx = '${ctx}';
     var user;
 
-    function getChildNodes(treeNode, result) {
+    function getChildNodes(treeNode, result, excludeParent) {
         for (var i in treeNode) {
-            debugger;
             if (treeNode[i].children.length == 0) {
                 result.push(treeNode[i].id);
             } else {
+                if(excludeParent){
+                    result.push(treeNode[i].id);
+                }
                 result = getChildNodes(treeNode[i].children, result);
             }
         }

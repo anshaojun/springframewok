@@ -15,7 +15,7 @@ insert into TBL_CORE_MENU (ID, MENU_NAME, PARENT_ID, PERMISSION, TYPE, URL, ICON
 values ('4176364B945A4E92A03E6E9C8B629638', '删除', '0AC926B0A3CC4A5889F77C87BFF79A67', 'sys:user:del', '1', null, null, 3, '1');
 
 insert into TBL_CORE_MENU (ID, MENU_NAME, PARENT_ID, PERMISSION, TYPE, URL, ICON, MLEVEL, IS_LEAF)
-values ('ee3ca7543c3d497fbc81837190ae56b7', '系统管理', '0', 'sys', '0', null, 'layui-icon-set-fill', 1, '0');
+values ('ee3ca7543c3d497fbc81837190ae56b7', '系统管理', '0', 'sys:system:view', '0', null, 'layui-icon-set-fill', 1, '0');
 
 insert into TBL_CORE_MENU (ID, MENU_NAME, PARENT_ID, PERMISSION, TYPE, URL, ICON, MLEVEL, IS_LEAF)
 values ('ee3ca7543c3d497fbc81837190ae56b8', '菜单管理', 'ee3ca7543c3d497fbc81837190ae56b7', 'sys:menu:list', '0', 'menuManage/main.do', 'layui-icon-more', 2, '1');

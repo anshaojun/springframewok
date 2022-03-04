@@ -32,4 +32,8 @@ public interface RoleMapper extends BaseMapper<Role> {
     void batchInsertRoleUser(@Param("roleId") String roleId, @Param("users") List<String> users);
 
     void deleteAgencyRole(@Param("agencyId") String agencyId);
+
+    void deleteRoleAgency(@Param("roleId") String roleId);
+
+    void batchInsertRoleAgency(@Param("roleId") String roleId,@Param("agencys") List<String> agencys);
 }

@@ -80,7 +80,11 @@
                         $("#operation").addClass("hide");
                         // 点击高亮
                         $(".layui-tree-set").removeClass('layui-tree-set-active');
+                        $(".layui-tree-set").find("i").css("color","#c0c4cc");
+                        $(".layui-tree-set").find(".layui-tree-txt").removeClass("text-white");
                         obj.elem.addClass('layui-tree-set-active');
+                        obj.elem.children(".layui-tree-entry").find("i").css("color","white");
+                        obj.elem.children(".layui-tree-entry").find(".layui-tree-txt").addClass("text-white");
                         var id = obj.data.id;
                         $.ajax({
                             type: "post",

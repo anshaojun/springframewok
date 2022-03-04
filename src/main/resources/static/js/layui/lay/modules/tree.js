@@ -110,9 +110,11 @@
         if (!a.prop("disabled")) {
             if ("object" == typeof i.children || e.find("." + v)[0]) {
                 var r = e.find("." + v).find('input[same="layuiTreeCheck"]');
-                r.each(function () {
-                    this.disabled || (this.checked = t)
-                })
+                if(this.config.checkChirld){
+                    r.each(function () {
+                        this.disabled || (this.checked = t)
+                    })
+                }
             }
             var l = function (e) {
                 if (e.parents("." + s)[0]) {

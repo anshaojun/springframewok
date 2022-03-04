@@ -28,17 +28,24 @@
             data: loadMenu(),
             id: 'treeId',
             showCheckbox: true,     //是否显示复选框
-            onlyIconControl: true
+            onlyIconControl: true,
+            checkChirld: false
         });
         $.ajax({
             type: "post",
-            data:{"id":'${role.id}'},
-            async:false,
-            dataType:"json",
-            url:ctx+"/roleManage/getConnectedMenu.do",
-            success:function(data){
-                if(data!=null&&data.length!=0){
-                    tree.setChecked('treeId', data);
+            data: {"id": '${role.id}'},
+            async: false,
+            dataType: "json",
+            url: ctx + "/roleManage/getConnectedMenu.do",
+            success: function (data) {
+                if (data != null && data.length != 0) {
+                    var selected = [];
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].isLeaf == '1') {
+                            selected[i] = data[i].id;
+                        }
+                    }
+                    tree.setChecked('treeId', selected);
                 }
             }
         });

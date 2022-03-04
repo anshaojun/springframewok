@@ -69,7 +69,7 @@ public class UserUtil {
                 menuList.addAll(menuMapper.getByParam(param));
             } else {
                 roleList.forEach(r -> {
-                    param.put("id", r.getId());
+                    param.put("roleId", r.getId());
                     List<Menu> menu = menuMapper.getByParam(param);
                     menuList.addAll(menu);
                 });

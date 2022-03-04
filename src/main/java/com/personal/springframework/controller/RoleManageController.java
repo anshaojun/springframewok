@@ -1,9 +1,6 @@
 package com.personal.springframework.controller;
 
-import com.personal.springframework.model.Menu;
-import com.personal.springframework.model.ResponseResult;
-import com.personal.springframework.model.Role;
-import com.personal.springframework.model.User;
+import com.personal.springframework.model.*;
 import com.personal.springframework.model.core.Page;
 import com.personal.springframework.model.enums.BizCodeEnum;
 import com.personal.springframework.model.enums.Permission;
@@ -131,6 +128,19 @@ public class RoleManageController extends AbstractController {
 
     /**
      * @Author 安少军
+     * @Description 关联单位页面
+     * @Date 12:06 2022/3/4
+     * @Param []
+     * @return java.lang.String
+     **/
+    @RequestMapping(value = "roleAgency", method = RequestMethod.GET)
+    @RequiresPermissions({"sys:permission:addagency"})
+    public String roleAgencyForm() {
+        return "roleAgency";
+    }
+
+    /**
+     * @Author 安少军
      * @Description 关联用户
      * @Date 16:17 2022/3/2
      * @Param []
@@ -152,13 +162,24 @@ public class RoleManageController extends AbstractController {
     @RequestMapping("getConnectedMenu")
     @ResponseBody
     @RequiresPermissions({"sys:permission:addmenu"})
-    public String[] getConnectedMenu(Role role) {
+    public List<Menu> getConnectedMenu(Role role) {
         List<Menu> menus = role.getMenuList();
-        String[] selected = new String[menus.size()];
-        for (int i = 0; i < menus.size(); i++) {
-            selected[i] = menus.get(i).getId();
-        }
-        return selected;
+        return menus;
+    }
+
+    /**
+     * @Author 安少军
+     * @Description 获取关联角色
+     * @Date 12:13 2022/3/4
+     * @Param [role]
+     * @return java.util.List<com.personal.springframework.model.Agency>
+     **/
+    @RequestMapping("getConnectedAgency")
+    @ResponseBody
+    @RequiresPermissions({"sys:permission:addagency"})
+    public Agency getConnectedAgency(Role role) {
+        Agency agency = role.getAgency();
+        return agency;
     }
 
     @RequestMapping("getConnectedUser")
@@ -185,6 +206,21 @@ public class RoleManageController extends AbstractController {
     @ResponseBody
     public ResponseResult roleMenuSave(@RequestParam("roleId") String roleId, @RequestParam(value = "menuIds[]",required = false) String[] menus) {
         roleManageService.connectRoleMenu(roleId, menus);
+        return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
+    }
+
+    /**
+     * @Author 安少军
+     * @Description 关联角色单位
+     * @Date 12:07 2022/3/4
+     * @Param [roleId, agencys]
+     * @return com.personal.springframework.model.ResponseResult
+     **/
+    @RequestMapping(value = "roleAgency", method = RequestMethod.POST)
+    @RequiresPermissions({"sys:permission:addagency"})
+    @ResponseBody
+    public ResponseResult roleAgencySave(@RequestParam("roleId") String roleId, @RequestParam(value = "agencyIds[]",required = false) String[] agencys) {
+        roleManageService.connectRoleAgency(roleId, agencys);
         return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
     }
 
