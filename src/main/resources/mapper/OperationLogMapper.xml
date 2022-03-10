@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personal.springframework.repository.OperationLogMapper">
+    <resultMap id="baseResultMap" type="com.personal.springframework.model.core.OperationLog">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="oper_model" property="operModel" jdbcType="VARCHAR"/>
+        <result column="oper_type" property="operType" jdbcType="VARCHAR"/>
+        <result column="oper_desc" property="operDesc" jdbcType="VARCHAR"/>
+        <result column="oper_method" property="operMethod" jdbcType="VARCHAR"/>
+        <result column="oper_param" property="operParam" jdbcType="VARCHAR"/>
+        <result column="oper_return" property="operReturn" jdbcType="VARCHAR"/>
+        <result column="oper_userid" property="operUserId" jdbcType="VARCHAR"/>
+        <result column="oper_username" property="operUserName" jdbcType="VARCHAR"/>
+        <result column="oper_ip" property="operIp" jdbcType="VARCHAR"/>
+        <result column="oper_time" property="operTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+
+    <select id="getByPage" parameterType="OperationLog" resultMap="baseResultMap">
+        select * from TBL_CORE_LOG a
+        <where>
+            <if test="id!=null and id!=''">
+                and a.id=#{id,jdbcType=VARCHAR}
+            </if>
+            <if test="operModel!=null and operModel!=''">
+                and instr(a.oper_model,#{operModel,jdbcType=VARCHAR})>0
+            </if>
+            <if test="operType!=null and operType!=''">
+                and instr(a.oper_type,#{operType,jdbcType=VARCHAR})>0
+            </if>
+            <if test="operUserId!=null and operUserId!=''">
+                and instr(a.oper_userid,#{operUserId,jdbcType=VARCHAR})>0
+            </if>
+            <if test="operUserName!=null and operUserName!=''">
+                and instr(a.oper_username,#{operUserName,jdbcType=VARCHAR})>0
+            </if>
+        </where>
+        order by oper_time desc
+    </select>
+
+    <insert id="insert" parameterType="OperationLog">
+        INSERT INTO TBL_CORE_LOG (id,
+                                  oper_model,
+                                  oper_type,
+                                  oper_desc,
+                                  oper_method,
+                                  oper_param,
+                                  oper_return,
+                                  oper_userid,
+                                  oper_username,
+                                  oper_ip,
+                                  oper_uri,
+                                  oper_time)
+        VALUES (SYS_GUID(),
+                #{operModel.name,jdbcType=VARCHAR},
+                #{operType.name,jdbcType=VARCHAR},
+                #{operDesc,jdbcType=VARCHAR},
+                #{operMethod,jdbcType=VARCHAR},
+                #{operParam,jdbcType=VARCHAR},
+                #{operReturn,jdbcType=VARCHAR},
+                #{operUserId,jdbcType=VARCHAR},
+                #{operUserName,jdbcType=VARCHAR},
+                #{operIp,jdbcType=VARCHAR},
+                #{operUri,jdbcType=VARCHAR},
+                #{operTime,jdbcType=TIMESTAMP})
+    </insert>
+
+</mapper>

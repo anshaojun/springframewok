@@ -1,9 +1,12 @@
 package com.personal.springframework.service;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.personal.springframework.annotation.OperLog;
 import com.personal.springframework.constant.MenuOptions;
 import com.personal.springframework.exception.ServiceException;
 import com.personal.springframework.model.Menu;
+import com.personal.springframework.model.enums.OperModel;
+import com.personal.springframework.model.enums.OperType;
 import com.personal.springframework.repository.MenuMapper;
 import com.personal.springframework.repository.RoleMapper;
 import com.personal.springframework.util.StringUtils;
@@ -28,6 +31,7 @@ public class MenuManageService extends BaseService<Menu, MenuMapper> {
     @Resource
     RoleMapper roleMapper;
 
+    @OperLog(operType = OperType.QUERY,operModel = OperModel.LOGIN,operDesc = "登录")
     public Object loadMenuTree() {
         List<Menu> menus = mapper.loadMenuTree();
         List<Map<String, Object>> result = new ArrayList<>();
@@ -48,6 +52,7 @@ public class MenuManageService extends BaseService<Menu, MenuMapper> {
         return result;
     }
 
+    @OperLog(operType = OperType.QUERY,operModel = OperModel.LOGIN,operDesc = "登录")
     @Transactional(readOnly = false)
     public void save(Menu menu) {
         try {

@@ -62,6 +62,8 @@ VALUES ('D1E89D532FEB44AEA4C5EB6C7B9EA274', '删除', '0372B9268F7A45F99AF64E9AA
 INSERT INTO TBL_CORE_MENU (id, menu_name, parent_id, permission, type, url, icon, mlevel, is_leaf)
 VALUES ('0372B9268F7A45F99AF64E9AA79D6D98', '单位维护', 'ee3ca7543c3d497fbc81837190ae56b7', 'sys:agency:list', '0',
         'agencyManage/main.do', 'layui-icon-home', 2, '1');
+insert into TBL_CORE_MENU (ID, MENU_NAME, PARENT_ID, PERMISSION, TYPE, URL, ICON, MLEVEL, IS_LEAF)
+values ('336F3A63E4A643DAAEA55B16042C3BD0', '日志管理', '0', 'log:oplog:list', '0', 'logManager/main.do', 'layui-icon-survey', 1, '1');
 
 INSERT INTO TBL_CORE_ROLE (id, role_name, permission)
 VALUES ('admin', '超级管理员', '1');
@@ -102,6 +104,8 @@ INSERT INTO TBL_CORE_ROLE_MENU (role_id, menu_id)
 VALUES ('admin', '1C2CB366107440D2BEA59C0D8F978278');
 INSERT INTO TBL_CORE_ROLE_MENU (role_id, menu_id)
 VALUES ('admin', 'D1E89D532FEB44AEA4C5EB6C7B9EA274');
+INSERT INTO TBL_CORE_ROLE_MENU (role_id, menu_id)
+VALUES ('admin', '336F3A63E4A643DAAEA55B16042C3BD0');
 
 INSERT INTO TBL_CORE_ROLE_USER (user_id, role_id)
 VALUES ('86E6B573FB9E4125894AB0A066A46404', 'default');

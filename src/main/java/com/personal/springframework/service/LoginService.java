@@ -1,6 +1,9 @@
 package com.personal.springframework.service;
 
+import com.personal.springframework.annotation.OperLog;
 import com.personal.springframework.model.User;
+import com.personal.springframework.model.enums.OperModel;
+import com.personal.springframework.model.enums.OperType;
 import com.personal.springframework.repository.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,7 @@ public class LoginService extends BaseService<User, UserMapper> {
         return mapper.userCheck(user);
     }
 
+    @OperLog(operType = OperType.QUERY,operModel = OperModel.LOGIN,operDesc = "登录")
     public void updateLoginInfo(User user) {
         try {
             mapper.update(user);
