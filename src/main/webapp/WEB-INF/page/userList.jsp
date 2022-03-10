@@ -78,6 +78,8 @@
             title: '用户维护',
             cellMinWidth: 100,
             even: true,
+            limit: 15,
+            limits: [15, 30, 45, 60, 75, 90],
             defaultToolbar: ['filter', 'print', 'exports'], //这里在右边显示
             toolbar: '#toolbar',   //这里在左边显示，然后指定到模版id
             cols: [

@@ -80,6 +80,8 @@
             id: 'layTable',
             url: ctx + '/roleManage/queryByPage.do',
             title: '角色维护',
+            limit: 15,
+            limits: [15, 30, 45, 60, 75, 90],
             cellMinWidth: 100,
             even: true,
             defaultToolbar: ['filter', 'print', 'exports'], //这里在右边显示

@@ -7,8 +7,10 @@ package com.personal.springframework.model.enums;
  * @create: 2022-03-10 14:30
  **/
 public enum OperType {
+    SAVE("保存"),
     INSERT("新增"),
     DELETE("删除"),
+    BATCHDELETE("删除"),
     UPDATE("修改"),
     QUERY("查询");
     private String name;

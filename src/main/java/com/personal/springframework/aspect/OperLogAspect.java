@@ -40,6 +40,7 @@ public class OperLogAspect {
     @Pointcut("@annotation(com.personal.springframework.annotation.OperLog)")
     public void operLogPointCut(){}
 
+    @AfterReturning(value = "operLogPointCut()",returning = "returns")
     public void saveOperLog(JoinPoint joinPoint, Object returns) {
         // 获取RequestAttributes
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();

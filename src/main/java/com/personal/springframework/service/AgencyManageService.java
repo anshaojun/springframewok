@@ -1,11 +1,14 @@
 package com.personal.springframework.service;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.personal.springframework.annotation.OperLog;
 import com.personal.springframework.constant.AgencyOptions;
 import com.personal.springframework.exception.ServiceException;
 import com.personal.springframework.model.Agency;
 import com.personal.springframework.model.Agency;
 import com.personal.springframework.model.Agency;
+import com.personal.springframework.model.enums.OperModel;
+import com.personal.springframework.model.enums.OperType;
 import com.personal.springframework.repository.AgencyMapper;
 import com.personal.springframework.repository.RoleMapper;
 import com.personal.springframework.util.StringUtils;
@@ -50,6 +53,7 @@ public class AgencyManageService extends BaseService<Agency, AgencyMapper> {
         return result;
     }
 
+    @OperLog(operType = OperType.SAVE,operModel = OperModel.AGENCY,operDesc = "保存单位（新增、修改）")
     @Transactional(readOnly = false)
     public void save(Agency agency) {
         try {
@@ -84,6 +88,7 @@ public class AgencyManageService extends BaseService<Agency, AgencyMapper> {
 
     @Override
     @Transactional(readOnly = false)
+    @OperLog(operType = OperType.DELETE,operModel = OperModel.AGENCY,operDesc = "删除单位，级联删除单位角色关联、子单位")
     public void delete(String id) {
         try {
             //删除，级联删除单位角色关联、子单位

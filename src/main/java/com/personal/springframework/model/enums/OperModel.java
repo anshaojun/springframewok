@@ -11,6 +11,7 @@ public enum OperModel {
     MENU("菜单"),
     USER("用户"),
     PERMISSION("权限"),
+    ROLE("角色"),
     AGENCY("单位");
     private String name;
 

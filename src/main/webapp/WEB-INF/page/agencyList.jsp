@@ -80,10 +80,10 @@
                         $("#operation").addClass("hide");
                         // 点击高亮
                         $(".layui-tree-set").removeClass('layui-tree-set-active');
-                        $(".layui-tree-set").find("i").css("color","#c0c4cc");
+                        $(".layui-tree-set").find("i").css("color", "#c0c4cc");
                         $(".layui-tree-set").find(".layui-tree-txt").removeClass("text-white");
                         obj.elem.addClass('layui-tree-set-active');
-                        obj.elem.children(".layui-tree-entry").find("i").css("color","white");
+                        obj.elem.children(".layui-tree-entry").find("i").css("color", "white");
                         obj.elem.children(".layui-tree-entry").find(".layui-tree-txt").addClass("text-white");
                         var id = obj.data.id;
                         $.ajax({
@@ -123,15 +123,7 @@
                     }
                 });
             });
-            $("#addAgency").click(function () {
-                $(".layui-form")[0].reset();
-                disablededit(true);
-                $("#id").val("");
-                if (select != null) {
-                    $("#parentId").val(select.id);
-                    $("#parentName").val(select.agencyName);
-                }
-            });
+
             $("#delAgency").click(function () {
                 if (select == null) {
                     parent.layer.msg('请选择一个单位进行删除', {icon: 5, shade: [0.3, '#000']});
@@ -159,6 +151,15 @@
                     });
                 }
             });
+            $("#addAgency").click(function () {
+                $(".layui-form")[0].reset();
+                disablededit(true);
+                $("#id").val("");
+                if (select != null) {
+                    $("#parentId").val(select.id);
+                    $("#parentName").val(select.agencyName);
+                }
+            });
             $("#editAgency").click(function () {
                 if (select == null) {
                     parent.layer.msg('请选择一个单位进行修改', {icon: 5, shade: [0.3, '#000']});
@@ -173,8 +174,13 @@
             if (flag) {
                 $("#operation").removeClass("hide");
                 $("form input").each(function (i, o) {
-                    if ($(o).attr("id") != 'parentName' && $(o).attr("id") != 'agencyCode' && $(o).attr("name") != 'isLeaf') {
+                    if ($(o).attr("id") != 'parentName' && $(o).attr("id") != 'agencyCode' && $(o).attr("name") != 'isLeaf' && $(o).attr("name") != 'type') {
                         $(o).removeAttr("disabled");
+                    }
+                });
+                $("form .layui-form-radio").each(function (i, o) {
+                    if($(o).siblings("input").attr("name")!="isLeaf"){
+                        $(o).removeClass("layui-radio-disbaled layui-disabled");
                     }
                 });
             } else {

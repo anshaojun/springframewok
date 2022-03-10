@@ -1,10 +1,13 @@
 package com.personal.springframework.service;
 
 import com.google.common.collect.Lists;
+import com.personal.springframework.annotation.OperLog;
 import com.personal.springframework.exception.ServiceException;
 import com.personal.springframework.model.Menu;
 import com.personal.springframework.model.Role;
 import com.personal.springframework.model.User;
+import com.personal.springframework.model.enums.OperModel;
+import com.personal.springframework.model.enums.OperType;
 import com.personal.springframework.repository.RoleMapper;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,7 @@ public class RoleManageService extends BaseService<Role, RoleMapper> {
     RoleMapper roleMapper;
 
     @Transactional(readOnly = false)
+    @OperLog(operType = OperType.DELETE,operModel = OperModel.ROLE,operDesc = "删除角色，级联删除角色菜单关联、角色用户关联、角色单位关联")
     public void delete(Role role) {
         try {
             if (StringUtils.isBlank(role.getId())) {
@@ -36,6 +40,8 @@ public class RoleManageService extends BaseService<Role, RoleMapper> {
             roleMapper.deleteRoleMenu(role.getId());
             //删除角色用户关联
             roleMapper.deleteRoleUser(role.getId());
+            //删除角色单位关联
+            roleMapper.deleteRoleAgency(role.getId());
             super.delete(role.getId());
         } catch (ServiceException se) {
             se.printStackTrace();
@@ -47,6 +53,7 @@ public class RoleManageService extends BaseService<Role, RoleMapper> {
     }
 
     @Transactional(readOnly = false)
+    @OperLog(operType = OperType.INSERT,operModel = OperModel.PERMISSION,operDesc = "角色菜单关联")
     public void connectRoleMenu(String roleId, String[] menus) {
         Role role = getById(roleId);
         if (role == null) {
@@ -61,6 +68,8 @@ public class RoleManageService extends BaseService<Role, RoleMapper> {
         }
     }
 
+    @Transactional(readOnly = false)
+    @OperLog(operType = OperType.INSERT,operModel = OperModel.PERMISSION,operDesc = "角色用户关联")
     public void connectRoleUser(String roleId, String[] users) {
         Role role = getById(roleId);
         if (role == null) {
@@ -74,7 +83,9 @@ public class RoleManageService extends BaseService<Role, RoleMapper> {
             });
         }
     }
+
     @Transactional(readOnly = false)
+    @OperLog(operType = OperType.INSERT,operModel = OperModel.PERMISSION,operDesc = "角色单位关联")
     public void connectRoleAgency(String roleId, String[] agencys) {
         Role role = getById(roleId);
         if (role == null) {

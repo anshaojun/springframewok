@@ -59,11 +59,13 @@ ALTER TABLE TBL_CORE_MENU
 CREATE TABLE TBL_CORE_ROLE
 (
     id        VARCHAR2(32) NOT NULL,
-    role_name VARCHAR2(60) NOT NULL
+    role_name VARCHAR2(60) NOT NULL,
+    permission varchar(1) NOT NULL
 );
 -- Add comments to the columns
 COMMENT ON COLUMN TBL_CORE_ROLE.id IS 'id';
 COMMENT ON COLUMN TBL_CORE_ROLE.role_name IS '角色名称';
+COMMENT ON COLUMN TBL_CORE_ROLE.permission IS '权限';
 -- Create/Recreate primary, unique and foreign key constraints
 ALTER TABLE TBL_CORE_ROLE
     ADD CONSTRAINT PK_TBL_CORE_ROLE PRIMARY KEY (id);

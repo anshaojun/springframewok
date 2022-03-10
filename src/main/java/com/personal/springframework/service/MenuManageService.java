@@ -31,7 +31,6 @@ public class MenuManageService extends BaseService<Menu, MenuMapper> {
     @Resource
     RoleMapper roleMapper;
 
-    @OperLog(operType = OperType.QUERY,operModel = OperModel.LOGIN,operDesc = "登录")
     public Object loadMenuTree() {
         List<Menu> menus = mapper.loadMenuTree();
         List<Map<String, Object>> result = new ArrayList<>();
@@ -52,7 +51,7 @@ public class MenuManageService extends BaseService<Menu, MenuMapper> {
         return result;
     }
 
-    @OperLog(operType = OperType.QUERY,operModel = OperModel.LOGIN,operDesc = "登录")
+    @OperLog(operType = OperType.SAVE,operModel = OperModel.MENU,operDesc = "保存菜单（新增、修改）")
     @Transactional(readOnly = false)
     public void save(Menu menu) {
         try {
@@ -103,6 +102,7 @@ public class MenuManageService extends BaseService<Menu, MenuMapper> {
 
     @Override
     @Transactional(readOnly = false)
+    @OperLog(operType = OperType.DELETE,operModel = OperModel.MENU,operDesc = "删除菜单，级联删除菜单角色关联、子菜单")
     public void delete(String id) {
         try {
             //删除，级联删除菜单角色关联、子菜单

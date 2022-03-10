@@ -45,6 +45,8 @@
             id: 'layTable',
             url: ctx + '/logManager/queryByPage.do',
             title: '日志查看',
+            limit: 15,
+            limits: [15, 30, 45, 60, 75, 90],
             cellMinWidth: 100,
             even: true,
             defaultToolbar: ['filter', 'print', 'exports'], //这里在右边显示
