@@ -12,6 +12,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Slf4j
-public class OperationLogService extends BaseService<OperationLog, OperationLogMapper> {
+public class OperationLogService extends AbstractService<OperationLog, OperationLogMapper> {
 
 }

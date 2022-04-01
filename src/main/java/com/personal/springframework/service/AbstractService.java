@@ -10,7 +10,7 @@ import com.personal.springframework.model.Role;
 import com.personal.springframework.model.core.BaseEntity;
 import com.personal.springframework.model.core.Page;
 import com.personal.springframework.repository.AgencyMapper;
-import com.personal.springframework.repository.BaseMapper;
+import com.personal.springframework.repository.AbstractMapper;
 import com.personal.springframework.repository.RoleMapper;
 import com.personal.springframework.util.UserUtil;
 import org.springframework.beans.BeanUtils;
@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +28,7 @@ import java.util.Set;
  * @author: 安少军
  * @create: 2021-12-29 11:50
  **/
-public abstract class BaseService<T extends BaseEntity, M extends BaseMapper<T>> {
+public abstract class AbstractService<T extends BaseEntity, M extends AbstractMapper<T>>  {
 
     //使用@Autowired自动装配
     @Autowired(required = false)

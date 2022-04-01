@@ -5,8 +5,6 @@ import com.personal.springframework.annotation.OperLog;
 import com.personal.springframework.constant.AgencyOptions;
 import com.personal.springframework.exception.ServiceException;
 import com.personal.springframework.model.Agency;
-import com.personal.springframework.model.Agency;
-import com.personal.springframework.model.Agency;
 import com.personal.springframework.model.enums.OperModel;
 import com.personal.springframework.model.enums.OperType;
 import com.personal.springframework.repository.AgencyMapper;
@@ -28,7 +26,7 @@ import java.util.Map;
  * @create: 2022-03-03 16:28
  **/
 @Service
-public class AgencyManageService extends BaseService<Agency, AgencyMapper> {
+public class AgencyManageService extends AbstractService<Agency, AgencyMapper> {
 
     @Resource
     RoleMapper roleMapper;

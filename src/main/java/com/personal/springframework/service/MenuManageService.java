@@ -27,7 +27,7 @@ import java.util.Map;
  **/
 @Service
 @Transactional(readOnly = true)
-public class MenuManageService extends BaseService<Menu, MenuMapper> {
+public class MenuManageService extends AbstractService<Menu, MenuMapper> {
     @Resource
     RoleMapper roleMapper;
 

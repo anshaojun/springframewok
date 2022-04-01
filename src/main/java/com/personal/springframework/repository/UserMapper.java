@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @time: 2021-05-18 16:42
  */
 @Mapper
-public interface UserMapper extends BaseMapper<User>{
+public interface UserMapper extends AbstractMapper<User> {
 
     User loginCheck(User user);
 

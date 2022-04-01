@@ -13,7 +13,7 @@ import java.util.List;
  * @create: 2022-01-10 14:54
  **/
 @Mapper
-public interface MenuMapper extends BaseMapper<Menu>{
+public interface MenuMapper extends AbstractMapper<Menu> {
     List<Menu> loadMenuTree();
 
     int deleteByParent(@Param("parentId") String parentId);

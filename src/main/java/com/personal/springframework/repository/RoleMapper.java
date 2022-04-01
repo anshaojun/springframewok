@@ -14,7 +14,7 @@ import java.util.List;
  * @time: 2021-05-18 16:42
  */
 @Mapper
-public interface RoleMapper extends BaseMapper<Role> {
+public interface RoleMapper extends AbstractMapper<Role> {
     int deleteMenuRole(@Param("menuId") String menuId);
 
     int deleteRoleMenu(@Param("roleId") String roleId);

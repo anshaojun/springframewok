@@ -2,7 +2,6 @@ package com.personal.springframework.service;
 
 import com.personal.springframework.annotation.OperLog;
 import com.personal.springframework.exception.ServiceException;
-import com.personal.springframework.model.Menu;
 import com.personal.springframework.model.User;
 import com.personal.springframework.model.enums.OperModel;
 import com.personal.springframework.model.enums.OperType;
@@ -26,7 +25,7 @@ import java.io.InputStream;
  **/
 @Service
 @Transactional(readOnly = true)
-public class UserManageService extends BaseService<User, UserMapper> {
+public class UserManageService extends AbstractService<User, UserMapper> {
 
     @Resource
     RoleMapper roleMapper;

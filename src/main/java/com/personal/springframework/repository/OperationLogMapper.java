@@ -10,5 +10,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @create: 2022-03-10 14:54
  **/
 @Mapper
-public interface OperationLogMapper extends BaseMapper<OperationLog> {
+public interface OperationLogMapper extends AbstractMapper<OperationLog> {
 }

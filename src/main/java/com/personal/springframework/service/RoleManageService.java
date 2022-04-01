@@ -3,9 +3,7 @@ package com.personal.springframework.service;
 import com.google.common.collect.Lists;
 import com.personal.springframework.annotation.OperLog;
 import com.personal.springframework.exception.ServiceException;
-import com.personal.springframework.model.Menu;
 import com.personal.springframework.model.Role;
-import com.personal.springframework.model.User;
 import com.personal.springframework.model.enums.OperModel;
 import com.personal.springframework.model.enums.OperType;
 import com.personal.springframework.repository.RoleMapper;
@@ -15,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * @program: springframework
@@ -25,7 +22,7 @@ import java.util.List;
  **/
 @Service
 @Transactional(readOnly = true)
-public class RoleManageService extends BaseService<Role, RoleMapper> {
+public class RoleManageService extends AbstractService<Role, RoleMapper> {
     @Resource
     RoleMapper roleMapper;
 

@@ -12,7 +12,7 @@ import java.util.List;
  * @time: 2021-05-18 16:42
  */
 @Mapper
-public interface AgencyMapper extends BaseMapper<Agency>{
+public interface AgencyMapper extends AbstractMapper<Agency> {
     List<Agency> loadAgencyTree();
 
     int deleteByParent(@Param("parentId") String parentId);
