@@ -1,6 +1,5 @@
 package com.personal.springframework.repository;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.Map;
  * @author: 安少军
  * @create: 2021-12-29 11:57
  **/
-public abstract interface AbstractMapper<T> extends BaseMapper<T> {
+public abstract interface AbstractMapper<T> {
 
     List<T> getByPage(T clazz);
 
