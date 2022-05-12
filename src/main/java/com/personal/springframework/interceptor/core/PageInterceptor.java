@@ -67,16 +67,20 @@ public class PageInterceptor implements Interceptor {
             //改造后的sql语句
             switch (jdbcType.toLowerCase()) {
                 case "oracle":
-                    pageSql = "select *" +
+                    pageSql = "select * " +
                             "  from (select rownum as row_, a.* " +
-                            " from ("+
+                            " from (" +
                             sql +
                             ") a) " +
                             "  where row_> " + page.getStartRow() + " and row_<=" + page.getEndRow() + "";
                     break;
                 case "mysql":
                 case "postgresql":
-                    pageSql = sql + " limit " + page.getStartRow() + " , " + page.getEndRow();
+                    pageSql = "select * " +
+                            " from ( " +
+                            sql +
+                            " ) " +
+                            " limit " + page.getStartRow() + "," + page.getEndRow();
                     break;
                 default:
                     break;
