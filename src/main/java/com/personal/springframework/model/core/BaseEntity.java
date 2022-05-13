@@ -22,5 +22,5 @@ public class BaseEntity extends Page {
         }
     }
 
-    private String dataScope;
+    private String agencyId;
 }

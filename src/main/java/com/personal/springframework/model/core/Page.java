@@ -32,6 +32,9 @@ public class Page<T> {
     //每页几条
     private int limit;
 
+    //数据筛选
+    private String dataScope_;
+
     private List<T> list = new ArrayList<T>();
 
     public void count() {

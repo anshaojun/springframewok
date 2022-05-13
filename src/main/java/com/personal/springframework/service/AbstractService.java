@@ -39,55 +39,6 @@ public abstract class AbstractService<T extends BaseEntity, M extends AbstractMa
     @Autowired
     private AgencyMapper agencyMapper;
 
-    /**
-     * @return java.lang.String
-     * @Author 安少军
-     * @Description 单位数据权限过滤
-     * @Date 15:10 2022/3/4
-     * @Param [targetTableAlies, targetTableColumn]
-     **/
-    protected String getDataScope(String targetTableAlies, String targetTableColumn) {
-        List<Role> roles = UserUtil.getLoginUser().getRoleList();
-        StringBuffer sql = new StringBuffer();
-        Set<String> agencies = new LinkedHashSet<>();
-        for (Role r : roles) {
-            Role role = roleMapper.getById(r.getId());
-            //存在所有数据权限
-            if (role.getPermission().equals(RoleOptions.ALLDATA.getId())) {
-                return "";
-            }
-            if (role.getPermission().equals(RoleOptions.OWNDATA.getId())) {
-                Agency agency = role.getAgency();
-                if (agency != null) {
-                    agencies.add(agency.getId());
-                }
-            }
-            if (role.getPermission().equals(RoleOptions.CHILD.getId())) {
-                Agency agency = role.getAgency();
-                if (agency != null) {
-                    List<Agency> childs = agencyMapper.getAgenciesByParent(agency.getId());
-                    childs.forEach(c -> {
-                        agencies.add(c.getId());
-                    });
-                }
-            }
-        }
-        if (agencies.size() > 1000) {
-            throw new ServiceException("当前用户权限冗余");
-        }
-        sql.append(" and " + targetTableAlies + "." + targetTableColumn + " in( ");
-        int i = 1;
-        for (String agencyId : agencies) {
-            sql.append("'").append(agencyId).append("'");
-            if (i != agencies.size()) {
-                sql.append(",");
-            }
-            i++;
-        }
-        sql.append(" ) ");
-        return sql.toString();
-    }
-
     @Transactional(readOnly = true)
     public Page<T> findPage(T clazz) {
         List<T> result = mapper.getByPage(clazz);
