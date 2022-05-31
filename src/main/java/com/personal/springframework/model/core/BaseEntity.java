@@ -4,6 +4,8 @@ package com.personal.springframework.model.core;
 import com.personal.springframework.util.StringUtils;
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @program: springframework
  * @description:
@@ -12,7 +14,24 @@ import lombok.Data;
  **/
 @Data
 public class BaseEntity extends Page {
+
     private String id;
+
+    private String agencyId;
+
+    private String createUser;
+
+    private String createAgency;
+
+    private Date createTime;
+
+    private String updateUser;
+
+    private String updateAgency;
+
+    private Date updateTime;
+
+    private String authSql;
 
     public boolean isNew() {
         if (StringUtils.isNotBlank(getId())) {
@@ -22,5 +41,4 @@ public class BaseEntity extends Page {
         }
     }
 
-    private String agencyId;
 }

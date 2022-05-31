@@ -5,11 +5,12 @@
         <id column="id" property="id" jdbcType="VARCHAR"/>
         <result column="role_name" property="roleName" jdbcType="VARCHAR"/>
         <result column="permission" property="permission" jdbcType="VARCHAR"/>
-        <association property="agency"
-                     javaType="com.personal.springframework.model.Agency"
-                     fetchType="eager"
-                     column="{id=id}"
-                     select="getAgency"/>
+        <collection property="agencyList"
+                    ofType="com.personal.springframework.model.Agency"
+                    fetchType="eager"
+                    javaType="java.util.List"
+                    column="{id=id}"
+                    select="getAgency"/>
         <collection property="menuList"
                     ofType="com.personal.springframework.model.Role"
                     fetchType="eager"
@@ -69,7 +70,10 @@
           AND r.id = #{id,jdbcType=VARCHAR}
     </select>
     <sql id="baseColumn">
-        a.id,
+        a
+        .
+        id
+        ,
         a.role_name,
         a.permission
     </sql>

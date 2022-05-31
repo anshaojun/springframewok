@@ -42,7 +42,7 @@ public class AgencyManageService extends AbstractService<Agency, AgencyMapper> {
             Map<String, Object> map = new HashMap<>();
             map.put("id", agency.getId());
             map.put("title", agency.getAgencyName());
-            map.put("spread", true);
+            map.put("parentId", agency.getParentId());
             List<Agency> child = agency.getChild();
             List<Map<String, Object>> children = new ArrayList<>();
             map.put("children", run(child, children));

@@ -174,7 +174,7 @@
             if (flag) {
                 $("#operation").removeClass("hide");
                 $("form input").each(function (i, o) {
-                    if ($(o).attr("id") != 'parentName' && $(o).attr("id") != 'agencyCode' && $(o).attr("name") != 'isLeaf' && $(o).attr("name") != 'type') {
+                    if ($(o).attr("id") != 'parentName' && $(o).attr("id") != 'agencyCode' && $(o).attr("name") != 'isLeaf' /*&& $(o).attr("name") != 'type'*/) {
                         $(o).removeAttr("disabled");
                     }
                 });

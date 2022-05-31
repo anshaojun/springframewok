@@ -27,5 +27,5 @@ public class Role extends BaseEntity {
     //用户
     private List<User> userList;
     //单位
-    private Agency agency;
+    private List<Agency> agencyList;
 }

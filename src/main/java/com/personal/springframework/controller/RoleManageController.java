@@ -177,11 +177,18 @@ public class RoleManageController extends AbstractController {
     @RequestMapping("getConnectedAgency")
     @ResponseBody
     @RequiresPermissions({"sys:permission:addagency"})
-    public Agency getConnectedAgency(Role role) {
-        Agency agency = role.getAgency();
+    public List<Agency> getConnectedAgency(Role role) {
+        List<Agency> agency = role.getAgencyList();
         return agency;
     }
 
+    /**
+     * 获取关联用户
+     * @author anshaojun
+     * @date 2022/5/31 0031 15:19
+     * @param role
+     * @return java.lang.String[]
+     **/
     @RequestMapping("getConnectedUser")
     @ResponseBody
     @RequiresPermissions({"sys:permission:adduser"})
@@ -224,6 +231,14 @@ public class RoleManageController extends AbstractController {
         return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
     }
 
+    /**
+     * 关联角色用户
+     * @author anshaojun
+     * @date 2022/5/31 0031 15:19
+     * @param roleId
+     * @param users
+     * @return com.personal.springframework.model.ResponseResult
+     **/
     @RequestMapping(value = "roleUser", method = RequestMethod.POST)
     @RequiresPermissions({"sys:permission:adduser"})
     @ResponseBody
