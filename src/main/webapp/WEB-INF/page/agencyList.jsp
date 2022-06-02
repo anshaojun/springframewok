@@ -20,13 +20,11 @@
         }
 
     </style>
-    <link rel="stylesheet" href="${ctx}/js/iconpicker-master/assets/layui/css/layui.css"/>
-    <script src="${ctx}/js/iconpicker-master/module/common.js"></script>
     <script>
+        var dtree;
         $(function () {
             var form;
             var select;
-            var tree;
             //表单提交事件
             layui.use('form', function () {
                 form = layui.form;
@@ -51,7 +49,7 @@
                             if (result.code == 200) {
                                 parent.layer.msg('保存成功', {icon: 6, shade: [0.3, '#000']}, function () {
                                     $(".layui-form")[0].reset();
-                                    tree.reload('treeId', {url: '', data: loadAgency()});
+                                    dtree.reload('agency_tree', {url: '', data: loadAgency()});
                                     disablededit(false);
                                 });
                             } else {
@@ -68,59 +66,52 @@
                 });
             });
             //单位树
-            layui.use(['tree', 'util'], function () {
-                tree = layui.tree;
-                tree.render({
-                    elem: '#agency_tree',
-                    data: loadAgency(),
-                    id: 'treeId',
-                    showCheckbox: false,     //是否显示复选框
-                    onlyIconControl: true,
-                    click: function (obj) {
-                        $("#operation").addClass("hide");
-                        // 点击高亮
-                        $(".layui-tree-set").removeClass('layui-tree-set-active');
-                        $(".layui-tree-set").find("i").css("color", "#c0c4cc");
-                        $(".layui-tree-set").find(".layui-tree-txt").removeClass("text-white");
-                        obj.elem.addClass('layui-tree-set-active');
-                        obj.elem.children(".layui-tree-entry").find("i").css("color", "white");
-                        obj.elem.children(".layui-tree-entry").find(".layui-tree-txt").addClass("text-white");
-                        var id = obj.data.id;
-                        $.ajax({
-                            type: "post",
-                            url: ctx + "/agencyManage/getAgency.do",
-                            data: {"id": id},
-                            dataType: "json",
-                            async: false,
-                            success: function (agency) {
-                                if (agency != null) {
-                                    select = agency;
-                                    $("#agencyName").val(agency.agencyName);
-                                    $("#agencyCode").val(agency.agencyCode);
-                                    if (agency.parent != null) {
-                                        $("#parentId").val(agency.parent.id);
-                                        $("#parentName").val(agency.parent.agencyName);
-                                    } else {
-                                        $("#parentId").val("");
-                                        $("#parentName").val("");
-                                    }
-                                    $("#id").val(agency.id);
-                                    if (agency.type == '1') {
-                                        $("input[name=type][value='1']").prop("checked", true);
-                                    } else {
-                                        $("input[name=type][value='0']").prop("checked", true);
-                                    }
-
-                                    if (agency.isLeaf == '1') {
-                                        $("input[name=isLeaf][value='1']").prop("checked", true);
-                                    } else {
-                                        $("input[name=isLeaf][value='0']").prop("checked", true);
-                                    }
-                                    form.render();
+            layui.extend({
+                dtree: '${ctx}/js/layui_ext/dtree/dtree'   // {/}的意思即代表采用自有路径，即不跟随 base 路径
+            }).use(['dtree', 'layer', 'jquery'], function () {
+                dtree = layui.dtree, layer = layui.layer, $ = layui.jquery;
+                // 初始化树
+                dtree.render({
+                    elem: "#agency_tree",
+                    data: loadAgency(), // 使用data加载
+                    line: true,
+                    skin: "zdysingle",
+                });
+                dtree.on("node('agency_tree')", function (obj) {
+                    $.ajax({
+                        type: "post",
+                        url: ctx + "/agencyManage/getAgency.do",
+                        data: {"id": obj.param.nodeId},
+                        dataType: "json",
+                        async: false,
+                        success: function (agency) {
+                            if (agency != null) {
+                                select = agency;
+                                $("#agencyName").val(agency.agencyName);
+                                $("#agencyCode").val(agency.agencyCode);
+                                if (agency.parent != null) {
+                                    $("#parentId").val(agency.parent.id);
+                                    $("#parentName").val(agency.parent.agencyName);
+                                } else {
+                                    $("#parentId").val("");
+                                    $("#parentName").val("");
                                 }
+                                $("#id").val(agency.id);
+                                if (agency.type == '1') {
+                                    $("input[name=type][value='1']").prop("checked", true);
+                                } else {
+                                    $("input[name=type][value='0']").prop("checked", true);
+                                }
+
+                                if (agency.isLeaf == '1') {
+                                    $("input[name=isLeaf][value='1']").prop("checked", true);
+                                } else {
+                                    $("input[name=isLeaf][value='0']").prop("checked", true);
+                                }
+                                form.render();
                             }
-                        });
-                    }
+                        }
+                    });
                 });
             });
 
@@ -140,7 +131,7 @@
                                     parent.layer.msg('删除成功', {icon: 6, shade: [0.3, '#000']}, function () {
                                         select = null;
                                         $(".layui-form")[0].reset();
-                                        tree.reload('treeId', {url: '', data: loadAgency()});
+                                        dtree.reload('agency_tree', {url: '', data: loadAgency()});
                                         disablededit(false);
                                     });
                                 } else {
@@ -179,7 +170,7 @@
                     }
                 });
                 $("form .layui-form-radio").each(function (i, o) {
-                    if($(o).siblings("input").attr("name")!="isLeaf"){
+                    if ($(o).siblings("input").attr("name") != "isLeaf") {
                         $(o).removeClass("layui-radio-disbaled layui-disabled");
                     }
                 });
@@ -201,6 +192,7 @@
                 type: "post",
                 dataType: "json",
                 async: false,
+                data: {"checkbox": false},
                 url: ctx + "/agencyManage/loadAgency.do",
                 success: function (result) {
                     data = result;
@@ -230,7 +222,7 @@
                     class="layui-icon layui-icon-delete"></i>删除
             </button>
         </shiro:hasPermission>
-        <div id="agency_tree"></div>
+        <ul id="agency_tree"></ul>
     </fieldset>
 </div>
 <div id="dept_particulars">

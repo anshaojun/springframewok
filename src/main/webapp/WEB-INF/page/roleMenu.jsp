@@ -11,6 +11,7 @@
             type: "post",
             dataType: "json",
             async: false,
+            data:{"roleId":'${role.id}',"checkbox":true},
             url: ctx + "/menuManage/loadMenu.do",
             success: function (result) {
                 data = result;
@@ -18,42 +19,31 @@
         });
         return data;
     }
-
-    var tree;
+    function getSelected() {
+        var paramJsonArr = DemoTree.getCheckbarJsonArrParam();
+        var nodeid = paramJsonArr["nodeId"];
+        return nodeid;
+    }
+    var DemoTree;
     //菜单树
-    layui.use(['tree', 'util'], function () {
-        tree = layui.tree;
-        tree.render({
-            elem: '#menu_tree',
-            data: loadMenu(),
-            id: 'treeId',
-            showCheckbox: true,     //是否显示复选框
-            onlyIconControl: true,
-            checkChirld: false
-        });
-        $.ajax({
-            type: "post",
-            data: {"id": '${role.id}'},
-            async: false,
-            dataType: "json",
-            url: ctx + "/roleManage/getConnectedMenu.do",
-            success: function (data) {
-                if (data != null && data.length != 0) {
-                    var selected = [];
-                    for (var i = 0; i < data.length; i++) {
-                        if (data[i].isLeaf == '1') {
-                            selected[i] = data[i].id;
-                        }
-                    }
-                    tree.setChecked('treeId', selected);
-                }
-            }
+    layui.extend({
+        dtree: '${ctx}/js/layui_ext/dtree/dtree'   // {/}的意思即代表采用自有路径，即不跟随 base 路径
+    }).use(['dtree', 'layer', 'jquery'], function () {
+        var dtree = layui.dtree, layer = layui.layer, $ = layui.jquery;
+        // 初始化树
+        DemoTree = dtree.render({
+            elem: "#menu_tree",
+            data: loadMenu(), // 使用data加载
+            line: true,
+            skin: "zdy",
+            checkbar: true,
+            checkbarType: "all" // 默认就是all，其他的值为： no-all  p-casc   self  only
         });
     });
 
 </script>
 <body>
-<div id="menu_tree"></div>
+<ul id="menu_tree"></ul>
 </body>
 <script>
 </script>

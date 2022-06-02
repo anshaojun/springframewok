@@ -20,15 +20,12 @@
         }
 
     </style>
-    <link rel="stylesheet" href="${ctx}/js/iconpicker-master/assets/layui/css/layui.css"/>
-    <script src="${ctx}/js/iconpicker-master/module/iconPicker/iconPicker.js"></script>
-    <script src="${ctx}/js/iconpicker-master/module/common.js"></script>
     <script>
+        var dtree;
         $(function () {
             var iconPicker;
             var form;
             var select;
-            var tree;
             //表单提交事件
             layui.use('form', function () {
                 form = layui.form;
@@ -66,7 +63,7 @@
                             if (result.code == 200) {
                                 parent.layer.msg('保存成功', {icon: 6, shade: [0.3, '#000']}, function () {
                                     $(".layui-form")[0].reset();
-                                    tree.reload('treeId', {url: '', data: loadMenu()});
+                                    tree.reload('menu_tree', {url: '', data: loadMenu()});
                                     disablededit(false);
                                     switchdom(true);
                                 });
@@ -83,6 +80,65 @@
                     } else {
                         switchdom(false);
                     }
+                });
+            });
+
+            //菜单树
+            layui.extend({
+                dtree: '${ctx}/js/layui_ext/dtree/dtree',   // {/}的意思即代表采用自有路径，即不跟随 base 路径
+                iconPicker: '${ctx}/js/iconpicker-master/module/iconPicker/iconPicker'
+            }).use(['dtree', 'layer', 'jquery'], function () {
+                dtree = layui.dtree, layer = layui.layer, $ = layui.jquery;
+                // 初始化树
+                dtree.render({
+                    elem: "#menu_tree",
+                    data: loadMenu(),
+                    line: true,
+                    skin: "zdysingle",
+                });
+                dtree.on("node('menu_tree')", function (obj) {
+                    $("#operation").addClass("hide");
+                    // 点击高亮
+                    $.ajax({
+                        type: "post",
+                        url: ctx + "/menuManage/getMenu.do",
+                        data: {"id": obj.param.nodeId},
+                        dataType: "json",
+                        async: false,
+                        success: function (menu) {
+                            if (menu != null) {
+                                select = menu;
+                                $("#menuName").val(menu.menuName);
+                                if (menu.parent != null) {
+                                    $("#parentId").val(menu.parent.id);
+                                    $("#parentName").val(menu.parent.menuName);
+                                } else {
+                                    $("#parentId").val("");
+                                    $("#parentName").val("");
+                                }
+                                $("#permission").val(menu.permission);
+                                $("#url").val(menu.url);
+                                $("#id").val(menu.id);
+                                if (menu.icon != null) {
+                                    iconPicker.checkIcon('iconPicker', menu.icon);
+                                }
+                                if (menu.type == '1') {
+                                    $("input[name=type][value='1']").prop("checked", true);
+                                    switchdom(true);
+                                } else {
+                                    $("input[name=type][value='0']").prop("checked", true);
+                                    switchdom(false);
+                                }
+
+                                if (menu.isLeaf == '1') {
+                                    $("input[name=isLeaf][value='1']").prop("checked", true);
+                                } else {
+                                    $("input[name=isLeaf][value='0']").prop("checked", true);
+                                }
+                                form.render();
+                            }
+                        }
+                    });
                 });
             });
             //图标选择器
@@ -112,69 +168,6 @@
                     }
                 });
             });
-            //菜单树
-            layui.use(['tree', 'util'], function () {
-                tree = layui.tree;
-                tree.render({
-                    elem: '#menu_tree',
-                    data: loadMenu(),
-                    id: 'treeId',
-                    showCheckbox: false,     //是否显示复选框
-                    onlyIconControl: true,
-                    click: function (obj) {
-                        $("#operation").addClass("hide");
-                        // 点击高亮
-                        $(".layui-tree-set").removeClass('layui-tree-set-active');
-                        $(".layui-tree-set").find("i").css("color", "#c0c4cc");
-                        $(".layui-tree-set").find(".layui-tree-txt").removeClass("text-white");
-                        obj.elem.addClass('layui-tree-set-active');
-                        obj.elem.children(".layui-tree-entry").find("i").css("color", "white");
-                        obj.elem.children(".layui-tree-entry").find(".layui-tree-txt").addClass("text-white");
-                        var id = obj.data.id;
-                        $.ajax({
-                            type: "post",
-                            url: ctx + "/menuManage/getMenu.do",
-                            data: {"id": id},
-                            dataType: "json",
-                            async: false,
-                            success: function (menu) {
-                                if (menu != null) {
-                                    select = menu;
-                                    $("#menuName").val(menu.menuName);
-                                    if (menu.parent != null) {
-                                        $("#parentId").val(menu.parent.id);
-                                        $("#parentName").val(menu.parent.menuName);
-                                    } else {
-                                        $("#parentId").val("");
-                                        $("#parentName").val("");
-                                    }
-                                    $("#permission").val(menu.permission);
-                                    $("#url").val(menu.url);
-                                    $("#id").val(menu.id);
-                                    if (menu.icon != null) {
-                                        iconPicker.checkIcon('iconPicker', menu.icon);
-                                    }
-                                    if (menu.type == '1') {
-                                        $("input[name=type][value='1']").prop("checked", true);
-                                        switchdom(true);
-                                    } else {
-                                        $("input[name=type][value='0']").prop("checked", true);
-                                        switchdom(false);
-                                    }
-
-                                    if (menu.isLeaf == '1') {
-                                        $("input[name=isLeaf][value='1']").prop("checked", true);
-                                    } else {
-                                        $("input[name=isLeaf][value='0']").prop("checked", true);
-                                    }
-                                    form.render();
-                                }
-                            }
-                        });
-                    }
-                });
-            });
-
             $("#delMenu").click(function () {
                 if (select == null) {
                     parent.layer.msg('请选择一个菜单进行删除', {icon: 5, shade: [0.3, '#000']});
@@ -191,7 +184,7 @@
                                     parent.layer.msg('删除成功', {icon: 6, shade: [0.3, '#000']}, function () {
                                         select = null;
                                         $(".layui-form")[0].reset();
-                                        tree.reload('treeId', {url: '', data: loadMenu()});
+                                        dtree.reload('menu_tree', {url: '', data: loadMenu()});
                                         disablededit(false);
                                         switchdom(true);
                                     });
@@ -265,6 +258,7 @@
                 type: "post",
                 dataType: "json",
                 async: false,
+                data: {"checkbox": false},
                 url: ctx + "/menuManage/loadMenu.do",
                 success: function (result) {
                     data = result;
@@ -294,7 +288,7 @@
                     class="layui-icon layui-icon-delete"></i>删除
             </button>
         </shiro:hasPermission>
-        <div id="menu_tree"></div>
+        <ul id="menu_tree"></ul>
     </fieldset>
 </div>
 <div id="dept_particulars">

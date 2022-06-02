@@ -3,8 +3,6 @@
 <html>
 <head>
     <title>Title</title>
-    <link rel="stylesheet" href="${ctx}/js/layui_ext/dtree/dtree.css" type="text/css">
-    <link rel="stylesheet" href="${ctx}/js/layui_ext/dtree/font/dtreefont.css" type="text/css">
 </head>
 <script>
     var DemoTree;
@@ -15,7 +13,7 @@
             type: "post",
             dataType: "json",
             async: false,
-            data:{"roleId":'${role.id}'},
+            data:{"roleId":'${role.id}',"checkbox":true},
             url: ctx + "/agencyManage/loadAgency.do",
             success: function (result) {
                 data = result;

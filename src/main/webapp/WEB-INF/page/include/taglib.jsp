@@ -13,6 +13,9 @@
 <link type="text/css" href="${ctx}/css/common.css" rel="stylesheet"/>
 <link type="text/css" href="${ctx}/css/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet"/>
 <link type="text/css" href="${ctx}/js/layui/css/layui.css" rel="stylesheet"/>
+<link rel="stylesheet" href="${ctx}/js/layui_ext/dtree/dtree.css" type="text/css">
+<link rel="stylesheet" href="${ctx}/js/layui_ext/dtree/font/dtreefont.css" type="text/css">
+<link type="text/css" rel="stylesheet" href="${ctx}/js/iconpicker-master/assets/layui/css/layui.css"/>
 <link rel="shortcut icon" href="${ctx}/images/favicon.png" type="image/x-icon">
 <script type="text/javascript" src="${ctx}/js/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="${ctx}/js/jquery/jquery.validate.min.js"></script>

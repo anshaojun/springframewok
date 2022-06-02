@@ -31,27 +31,33 @@ public class MenuManageService extends AbstractService<Menu, MenuMapper> {
     @Resource
     RoleMapper roleMapper;
 
-    public Object loadMenuTree() {
-        List<Menu> menus = mapper.loadMenuTree();
+    public Object loadMenuTree(String roleId, boolean checkbox) {
+        List<Menu> menus = mapper.loadMenuTree(roleId);
         List<Map<String, Object>> result = new ArrayList<>();
-        return run(menus, result);
+        return run(menus, result, checkbox);
     }
 
-    private Object run(List<Menu> menus, List<Map<String, Object>> result) {
+    private Object run(List<Menu> menus, List<Map<String, Object>> result, boolean checkbox) {
         for (Menu menu : menus) {
             Map<String, Object> map = new HashMap<>();
             map.put("id", menu.getId());
             map.put("title", menu.getMenuName());
             map.put("spread", true);
+            if (checkbox) {
+                Map<String, String> checked = new HashMap<>();
+                checked.put("type", "0");
+                checked.put("checked", menu.getChecked() ? "1" : "0");
+                map.put("checkArr", new Object[]{checked});
+            }
             List<Menu> child = menu.getChild();
             List<Map<String, Object>> children = new ArrayList<>();
-            map.put("children", run(child, children));
+            map.put("children", run(child, children, checkbox));
             result.add(map);
         }
         return result;
     }
 
-    @OperLog(operType = OperType.SAVE,operModel = OperModel.MENU,operDesc = "保存菜单（新增、修改）")
+    @OperLog(operType = OperType.SAVE, operModel = OperModel.MENU, operDesc = "保存菜单（新增、修改）")
     @Transactional(readOnly = false)
     public void save(Menu menu) {
         try {
@@ -65,10 +71,10 @@ public class MenuManageService extends AbstractService<Menu, MenuMapper> {
                     }
                 }
                 Menu parent = getById(menu.getParent().getId());
-                if(parent.getType().equals(MenuOptions.BUTTON.getId())){
+                if (parent.getType().equals(MenuOptions.BUTTON.getId())) {
                     throw new ServiceException("按钮下无法添加元素");
                 }
-                if(menu.getType().equals(MenuOptions.MENU.getId())){
+                if (menu.getType().equals(MenuOptions.MENU.getId())) {
                     if (parent.getType().equals(MenuOptions.MENU.getId()) && parent.getIsLeaf().equals(MenuOptions.LEAF.getId())) {
                         parent.setIsLeaf(MenuOptions.NORLEAF.getId());
                         super.save(parent);
@@ -102,7 +108,7 @@ public class MenuManageService extends AbstractService<Menu, MenuMapper> {
 
     @Override
     @Transactional(readOnly = false)
-    @OperLog(operType = OperType.DELETE,operModel = OperModel.MENU,operDesc = "删除菜单，级联删除菜单角色关联、子菜单")
+    @OperLog(operType = OperType.DELETE, operModel = OperModel.MENU, operDesc = "删除菜单，级联删除菜单角色关联、子菜单")
     public void delete(String id) {
         try {
             //删除，级联删除菜单角色关联、子菜单

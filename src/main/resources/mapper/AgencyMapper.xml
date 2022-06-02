@@ -33,7 +33,10 @@
 
 
     <sql id="baseColumn">
-        a.id,
+        a
+        .
+        id
+        ,
         a.agency_code,
         a.agency_name,
         a.type,
@@ -45,8 +48,11 @@
     <select id="loadAgencyTree" resultMap="treeMap">
         select
         <include refid="baseColumn"/>,
-        #{roleId,jdbcType=VARCHAR} as role_id,
-        (select count(1) from tbl_core_role_agency t where t.role_id=#{roleId,jdbcType=VARCHAR} and t.agency_id=a.id) checked
+        #{roleId,jdbcType=VARCHAR} as role_id
+        <if test="roleId!=null and roleId!=''">
+            ,(select count(1) from tbl_core_role_agency t where t.role_id=#{roleId,jdbcType=VARCHAR} and
+            t.agency_id=a.id) checked
+        </if>
         from TBL_CORE_AGENCY a
         where a.parent_id='0'
     </select>
@@ -54,8 +60,11 @@
     <select id="getChild" resultMap="treeMap" parameterType="java.util.HashMap">
         select
         <include refid="baseColumn"/>,
-        #{role_id,jdbcType=VARCHAR} as role_id,
-        (select count(1) from tbl_core_role_agency t where t.role_id=#{role_id,jdbcType=VARCHAR} and t.agency_id=a.id) checked
+        #{role_id,jdbcType=VARCHAR} as role_id
+        <if test="role_id!=null and role_id!=''">
+            ,(select count(1) from tbl_core_role_agency t where t.role_id=#{role_id,jdbcType=VARCHAR} and
+            t.agency_id=a.id) checked
+        </if>
         from TBL_CORE_AGENCY a
         where a.parent_id=#{id,jdbcType=VARCHAR}
     </select>
@@ -185,7 +194,7 @@
         WHERE parent_id = #{parentId,jdbcType=VARCHAR}
     </delete>
 
-    <select id="getAgenciesByParent" parameterType="java.lang.String" resultMap="ResultMap" >
+    <select id="getAgenciesByParent" parameterType="java.lang.String" resultMap="ResultMap">
         select
         <include refid="baseColumn"/>
         from tbl_core_agency a start with parent_id=#{agencyId,jdbcType=VARCHAR} connect by prior id=parent_id

@@ -33,4 +33,6 @@ public class Menu extends BaseEntity {
     private List<Menu> child = new ArrayList<>();
     //是否底级
     private String isLeaf;
+    //是否选中
+    private Boolean checked;
 }

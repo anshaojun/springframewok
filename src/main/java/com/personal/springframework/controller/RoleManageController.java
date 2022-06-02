@@ -152,20 +152,6 @@ public class RoleManageController extends AbstractController {
         return "roleUser";
     }
 
-    /**
-     * @Author 安少军
-     * @Description 加载关联菜单
-     * @Date 16:09 2022/2/8
-     * @Param [role]
-     * @return java.lang.String[]
-     **/
-    @RequestMapping("getConnectedMenu")
-    @ResponseBody
-    @RequiresPermissions({"sys:permission:addmenu"})
-    public List<Menu> getConnectedMenu(Role role) {
-        List<Menu> menus = role.getMenuList();
-        return menus;
-    }
 
     /**
      * 获取关联用户

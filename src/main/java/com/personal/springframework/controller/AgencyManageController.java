@@ -24,7 +24,7 @@ import javax.annotation.Resource;
  **/
 @Controller
 @RequestMapping("agencyManage")
-public class AgencyManageController extends AbstractController{
+public class AgencyManageController extends AbstractController {
 
     @Resource
     AgencyManageService agencyManageService;
@@ -38,11 +38,11 @@ public class AgencyManageController extends AbstractController{
     }
 
     /**
+     * @return java.lang.String
      * @Author 安少军
      * @Description 主页
      * @Date 17:29 2022/3/3
      * @Param []
-     * @return java.lang.String
      **/
     @RequestMapping("main")
     public String main() {
@@ -50,25 +50,25 @@ public class AgencyManageController extends AbstractController{
     }
 
     /**
+     * @return java.lang.Object
      * @Author 安少军
      * @Description 加载单位树
      * @Date 17:29 2022/3/3
      * @Param []
-     * @return java.lang.Object
      **/
     @RequestMapping("loadAgency")
     @ResponseBody
-    @RequiresPermissions(value = {"sys:agency:list","sys:permission:addagency"},logical = Logical.OR)
-    public Object loadAgency(@RequestParam("roleId") String roleId) {
-        return agencyManageService.loadAgencyTree(roleId);
+    @RequiresPermissions(value = {"sys:agency:list", "sys:permission:addagency"}, logical = Logical.OR)
+    public Object loadAgency(@RequestParam(value = "roleId", required = false) String roleId, @RequestParam("checkbox") boolean checkbox) {
+        return agencyManageService.loadAgencyTree(roleId, checkbox);
     }
 
     /**
+     * @return com.personal.springframework.model.Agency
      * @Author 安少军
      * @Description 获取单位信息
      * @Date 17:29 2022/3/3
      * @Param [agency]
-     * @return com.personal.springframework.model.Agency
      **/
     @RequestMapping("getAgency")
     @ResponseBody
@@ -78,11 +78,11 @@ public class AgencyManageController extends AbstractController{
     }
 
     /**
+     * @return com.personal.springframework.model.ResponseResult
      * @Author 安少军
      * @Description 保存
      * @Date 17:30 2022/3/3
      * @Param [agency]
-     * @return com.personal.springframework.model.ResponseResult
      **/
     @RequestMapping("save")
     @ResponseBody
@@ -94,11 +94,11 @@ public class AgencyManageController extends AbstractController{
 
 
     /**
+     * @return com.personal.springframework.model.ResponseResult
      * @Author 安少军
      * @Description 删除
      * @Date 17:30 2022/3/3
      * @Param [agency]
-     * @return com.personal.springframework.model.ResponseResult
      **/
     @RequestMapping("del")
     @ResponseBody

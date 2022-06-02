@@ -14,7 +14,7 @@ import java.util.List;
  **/
 @Mapper
 public interface MenuMapper extends AbstractMapper<Menu> {
-    List<Menu> loadMenuTree();
+    List<Menu> loadMenuTree(@Param("roleId") String roleId);
 
     int deleteByParent(@Param("parentId") String parentId);
 }

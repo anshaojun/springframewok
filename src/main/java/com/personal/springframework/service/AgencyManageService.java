@@ -31,25 +31,27 @@ public class AgencyManageService extends AbstractService<Agency, AgencyMapper> {
     @Resource
     RoleMapper roleMapper;
 
-    public Object loadAgencyTree(String roleId) {
+    public Object loadAgencyTree(String roleId,boolean checkbox) {
         List<Agency> agencys = mapper.loadAgencyTree(roleId);
         List<Map<String, Object>> result = new ArrayList<>();
-        return run(agencys, result);
+        return run(agencys, result, checkbox);
     }
 
-    private Object run(List<Agency> agencys, List<Map<String, Object>> result) {
+    private Object run(List<Agency> agencys, List<Map<String, Object>> result, boolean checkbox) {
         for (Agency agency : agencys) {
             Map<String, Object> map = new HashMap<>();
             map.put("id", agency.getId());
             map.put("title", agency.getAgencyName());
             map.put("parentId", agency.getParentId());
-            Map<String, String> checked = new HashMap<>();
-            checked.put("type", "0");
-            checked.put("checked", agency.getChecked() ? "1" : "0");
-            map.put("checkArr", new Object[]{checked});
+            if(checkbox){
+                Map<String, String> checked = new HashMap<>();
+                checked.put("type", "0");
+                checked.put("checked", agency.getChecked() ? "1" : "0");
+                map.put("checkArr", new Object[]{checked});
+            }
             List<Agency> child = agency.getChild();
             List<Map<String, Object>> children = new ArrayList<>();
-            map.put("children", run(child, children));
+            map.put("children", run(child, children,checkbox));
             result.add(map);
         }
         return result;

@@ -62,8 +62,8 @@ public class MenuManageController {
     @RequestMapping("loadMenu")
     @ResponseBody
     @RequiresPermissions(value = {"sys:menu:list","sys:permission:addmenu"},logical = Logical.OR)
-    public Object loadMenu() {
-        return menuManageService.loadMenuTree();
+    public Object loadMenu(@RequestParam(value = "roleId",required = false) String roleId, @RequestParam("checkbox") boolean checkbox) {
+        return menuManageService.loadMenuTree(roleId,checkbox);
     }
 
     /**

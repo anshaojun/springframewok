@@ -212,11 +212,10 @@
                         yes: function (index, layero) {
                             //调用
                             var frame = $(layero).find("iframe")[0].contentWindow;
-                            var checkedData = frame.tree.getChecked('treeId');
-                            var menus = getChildNodes(checkedData, [], true);
+                            var selected = frame.getSelected();
                             $.ajax({
                                 type: "post",
-                                data: {"roleId": data.id, "menuIds": menus},
+                                data: {"roleId": data.id, "menuIds": selected},
                                 dataType: "json",
                                 url: ctx + "/roleManage/roleMenu.do",
                                 async: false,
