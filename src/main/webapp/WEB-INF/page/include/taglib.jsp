@@ -14,8 +14,6 @@
 <link type="text/css" href="${ctx}/css/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet"/>
 <link type="text/css" href="${ctx}/js/layui/css/layui.css" rel="stylesheet"/>
 <link rel="shortcut icon" href="${ctx}/images/favicon.png" type="image/x-icon">
-<link rel="shortcut icon" href="${ctx}/js/layui_ext/dtree/dtree.css" type="text/css">
-<link rel="shortcut icon" href="${ctx}/js/layui_ext/dtree/font/dtreefont.css" type="text/css">
 <script type="text/javascript" src="${ctx}/js/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="${ctx}/js/jquery/jquery.validate.min.js"></script>
 <script type="text/javascript" src="${ctx}/js/jquery/messages_zh.js"></script>

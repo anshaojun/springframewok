@@ -26,7 +26,8 @@
         <result column="type" property="type" jdbcType="VARCHAR"/>
         <result column="mlevel" property="mLevel" jdbcType="VARCHAR"/>
         <result column="is_leaf" property="isLeaf" jdbcType="VARCHAR"/>
-        <collection property="child" ofType="com.personal.springframework.model.Agency" column="id"
+        <result column="checked" property="checked" jdbcType="BOOLEAN"/>
+        <collection property="child" ofType="com.personal.springframework.model.Agency" column="{id=id,role_id=role_id}"
                     select="getChild"/>
     </resultMap>
 
@@ -43,14 +44,18 @@
 
     <select id="loadAgencyTree" resultMap="treeMap">
         select
-        <include refid="baseColumn"/>
+        <include refid="baseColumn"/>,
+        #{roleId,jdbcType=VARCHAR} as role_id,
+        (select count(1) from tbl_core_role_agency t where t.role_id=#{roleId,jdbcType=VARCHAR} and t.agency_id=a.id) checked
         from TBL_CORE_AGENCY a
         where a.parent_id='0'
     </select>
 
-    <select id="getChild" resultMap="treeMap">
+    <select id="getChild" resultMap="treeMap" parameterType="java.util.HashMap">
         select
-        <include refid="baseColumn"/>
+        <include refid="baseColumn"/>,
+        #{role_id,jdbcType=VARCHAR} as role_id,
+        (select count(1) from tbl_core_role_agency t where t.role_id=#{role_id,jdbcType=VARCHAR} and t.agency_id=a.id) checked
         from TBL_CORE_AGENCY a
         where a.parent_id=#{id,jdbcType=VARCHAR}
     </select>

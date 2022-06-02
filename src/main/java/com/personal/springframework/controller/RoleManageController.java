@@ -168,21 +168,6 @@ public class RoleManageController extends AbstractController {
     }
 
     /**
-     * @Author 安少军
-     * @Description 获取关联角色
-     * @Date 12:13 2022/3/4
-     * @Param [role]
-     * @return java.util.List<com.personal.springframework.model.Agency>
-     **/
-    @RequestMapping("getConnectedAgency")
-    @ResponseBody
-    @RequiresPermissions({"sys:permission:addagency"})
-    public List<Agency> getConnectedAgency(Role role) {
-        List<Agency> agency = role.getAgencyList();
-        return agency;
-    }
-
-    /**
      * 获取关联用户
      * @author anshaojun
      * @date 2022/5/31 0031 15:19

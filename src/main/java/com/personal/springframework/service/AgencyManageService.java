@@ -31,8 +31,8 @@ public class AgencyManageService extends AbstractService<Agency, AgencyMapper> {
     @Resource
     RoleMapper roleMapper;
 
-    public Object loadAgencyTree() {
-        List<Agency> agencys = mapper.loadAgencyTree();
+    public Object loadAgencyTree(String roleId) {
+        List<Agency> agencys = mapper.loadAgencyTree(roleId);
         List<Map<String, Object>> result = new ArrayList<>();
         return run(agencys, result);
     }
@@ -43,6 +43,10 @@ public class AgencyManageService extends AbstractService<Agency, AgencyMapper> {
             map.put("id", agency.getId());
             map.put("title", agency.getAgencyName());
             map.put("parentId", agency.getParentId());
+            Map<String, String> checked = new HashMap<>();
+            checked.put("type", "0");
+            checked.put("checked", agency.getChecked() ? "1" : "0");
+            map.put("checkArr", new Object[]{checked});
             List<Agency> child = agency.getChild();
             List<Map<String, Object>> children = new ArrayList<>();
             map.put("children", run(child, children));
@@ -51,7 +55,7 @@ public class AgencyManageService extends AbstractService<Agency, AgencyMapper> {
         return result;
     }
 
-    @OperLog(operType = OperType.SAVE,operModel = OperModel.AGENCY,operDesc = "保存单位（新增、修改）")
+    @OperLog(operType = OperType.SAVE, operModel = OperModel.AGENCY, operDesc = "保存单位（新增、修改）")
     @Transactional(readOnly = false)
     public void save(Agency agency) {
         try {
@@ -86,7 +90,7 @@ public class AgencyManageService extends AbstractService<Agency, AgencyMapper> {
 
     @Override
     @Transactional(readOnly = false)
-    @OperLog(operType = OperType.DELETE,operModel = OperModel.AGENCY,operDesc = "删除单位，级联删除单位角色关联、子单位")
+    @OperLog(operType = OperType.DELETE, operModel = OperModel.AGENCY, operDesc = "删除单位，级联删除单位角色关联、子单位")
     public void delete(String id) {
         try {
             //删除，级联删除单位角色关联、子单位

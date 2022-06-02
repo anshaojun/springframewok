@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Mapper
 public interface AgencyMapper extends AbstractMapper<Agency> {
-    List<Agency> loadAgencyTree();
+    List<Agency> loadAgencyTree(@Param("roleId") String roleId);
 
     int deleteByParent(@Param("parentId") String parentId);
 

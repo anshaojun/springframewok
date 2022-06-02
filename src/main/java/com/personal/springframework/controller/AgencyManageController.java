@@ -59,8 +59,8 @@ public class AgencyManageController extends AbstractController{
     @RequestMapping("loadAgency")
     @ResponseBody
     @RequiresPermissions(value = {"sys:agency:list","sys:permission:addagency"},logical = Logical.OR)
-    public Object loadAgency() {
-        return agencyManageService.loadAgencyTree();
+    public Object loadAgency(@RequestParam("roleId") String roleId) {
+        return agencyManageService.loadAgencyTree(roleId);
     }
 
     /**

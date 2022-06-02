@@ -21,5 +21,6 @@ public class Agency extends BaseEntity {
     private String mLevel;
     private String type;
     private Agency parent;
+    private Boolean checked;
     private List<Agency> child = new ArrayList<>();
 }

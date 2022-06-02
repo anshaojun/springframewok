@@ -245,16 +245,11 @@
                         yes: function (index, layero) {
                             //调用
                             var frame = $(layero).find("iframe")[0].contentWindow;
-                            var agencys = new Array();
-                            var agencyId = frame.agencyId;
-                            if(agencyId==null||agencyId.length==0){
-                                parent.layer.msg('请选择一个单位', {icon: 5, shade: [0.3, '#000']});
-                                return;
-                            }
-                            agencys.push(agencyId);
+                            var selected = frame.getSelected();
+
                             $.ajax({
                                 type: "post",
-                                data: {"roleId": data.id, "agencyIds": agencys},
+                                data: {"roleId": data.id, "agencyIds": selected},
                                 dataType: "json",
                                 url: ctx + "/roleManage/roleAgency.do",
                                 async: false,
