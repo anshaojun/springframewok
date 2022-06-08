@@ -118,7 +118,7 @@
             if (obj.event === 'add') {
                 var index = parent.layer.open({
                     title: "新增角色",
-                    area: ['600px', '350px'],
+                    area: ['600px', '170px'],
                     type: 2,
                     content: ctx + "/roleManage/form.do",
                     btn: ['确定', '取消'],
@@ -128,10 +128,10 @@
                         var valid = frame.sub();
                         if (valid) {
                             var roleName = $(layero).find('iframe').contents().find("#roleName").val();
-                            var permission = $(layero).find('iframe').contents().find("#permission").val();
+                            //var permission = $(layero).find('iframe').contents().find("#permission").val();
                             $.ajax({
                                 type: "post",
-                                data: {"roleName": roleName, "permission": permission},
+                                data: {"roleName": roleName/*, "permission": permission*/},
                                 dataType: "json",
                                 url: ctx + "/roleManage/save.do",
                                 async: false,

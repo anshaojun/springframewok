@@ -4,9 +4,9 @@
 <head>
     <title>Title</title>
     <script type="text/javascript">
-        $(function () {
+        /*$(function () {
             $("#permission option[value='" + '${role.permission}' + "']").attr("selected", true);
-        })
+        })*/
     </script>
 </head>
 <body>
@@ -23,7 +23,7 @@
                        maxlength="20">
             </div>
         </div>
-        <div class="layui-form-item">
+        <%--<div class="layui-form-item">
             <label class="layui-form-label"><font color="red">*</font>角色权限</label>
             <div class="layui-input-block">
                 <select name="permission" id="permission" lay-verify="required" lay-search>
@@ -33,7 +33,7 @@
                     </c:forEach>
                 </select>
             </div>
-        </div>
+        </div>--%>
         <button class="layui-btn" lay-submit lay-filter="formDemo" style="display: none ">立即提交</button>
     </form>
 </fieldset>

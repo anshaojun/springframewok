@@ -1,5 +1,6 @@
 package com.personal.springframework.controller;
 
+import com.personal.springframework.annotation.AgencyAuth;
 import com.personal.springframework.model.Agency;
 import com.personal.springframework.model.ResponseResult;
 import com.personal.springframework.model.enums.BizCodeEnum;

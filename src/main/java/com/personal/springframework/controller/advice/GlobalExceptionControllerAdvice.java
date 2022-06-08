@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
 /**
  * @program: personalhub
  * @description: 捕获controller没有catch的异常，用于参数校验、业务异常等的封装
@@ -38,6 +40,7 @@ public class GlobalExceptionControllerAdvice {
         if (sb.length() != 0) {
             msg = ":" + sb.substring(0, sb.lastIndexOf(","));
         }
+        e.printStackTrace();
         return ResponseResult.error(BizCodeEnum.VAILD_EXCEPTION.getCode(), BizCodeEnum.VAILD_EXCEPTION.getMsg() + msg);
     }
 
@@ -45,6 +48,7 @@ public class GlobalExceptionControllerAdvice {
     @ExceptionHandler(value = ServiceException.class)
     @ResponseBody
     public ResponseResult handleException(ServiceException e) {
+        e.printStackTrace();
         return ResponseResult.error(BizCodeEnum.SERVICE_EXCEPTION.getCode(), BizCodeEnum.SERVICE_EXCEPTION.getMsg() + ":" + e.getMessage());
     }
 
@@ -52,6 +56,7 @@ public class GlobalExceptionControllerAdvice {
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
     @ResponseBody
     public ResponseResult handleException(MissingServletRequestParameterException e) {
+        e.printStackTrace();
         return ResponseResult.error(BizCodeEnum.VAILD_EXCEPTION.getCode(), BizCodeEnum.VAILD_EXCEPTION.getMsg());
     }
 
@@ -59,6 +64,7 @@ public class GlobalExceptionControllerAdvice {
     @ExceptionHandler(value = UnauthorizedException.class)
     @ResponseBody
     public ResponseResult handleException(UnauthorizedException e) {
+        e.printStackTrace();
         return ResponseResult.error(BizCodeEnum.UNAUTHORIZED_EXCEPTION.getCode(), BizCodeEnum.UNAUTHORIZED_EXCEPTION.getMsg());
     }
 
@@ -66,6 +72,13 @@ public class GlobalExceptionControllerAdvice {
     @ExceptionHandler(value = BadSqlGrammarException.class)
     @ResponseBody
     public ResponseResult handleException(BadSqlGrammarException e) {
+        e.printStackTrace();
+        return ResponseResult.error(BizCodeEnum.INNER_EXCEPTION.getCode(), BizCodeEnum.INNER_EXCEPTION.getMsg());
+    }
+    @ExceptionHandler(value = SQLIntegrityConstraintViolationException.class)
+    @ResponseBody
+    public ResponseResult handleException(SQLIntegrityConstraintViolationException e) {
+        e.printStackTrace();
         return ResponseResult.error(BizCodeEnum.INNER_EXCEPTION.getCode(), BizCodeEnum.INNER_EXCEPTION.getMsg());
     }
 
@@ -73,6 +86,7 @@ public class GlobalExceptionControllerAdvice {
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public ResponseResult handleException(Exception e) {
+        e.printStackTrace();
         return ResponseResult.error(BizCodeEnum.UNKNOW_EXCEPTION.getCode(), BizCodeEnum.UNKNOW_EXCEPTION.getMsg());
     }
 

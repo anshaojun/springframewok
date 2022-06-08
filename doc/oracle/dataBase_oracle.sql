@@ -60,7 +60,7 @@ CREATE TABLE TBL_CORE_ROLE
 (
     id        VARCHAR2(32) NOT NULL,
     role_name VARCHAR2(60) NOT NULL,
-    permission varchar(1) NOT NULL
+    permission varchar(1)
 );
 -- Add comments to the columns
 COMMENT ON COLUMN TBL_CORE_ROLE.id IS 'id';

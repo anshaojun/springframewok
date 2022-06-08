@@ -75,11 +75,11 @@ public class RoleManageController extends AbstractController {
     @RequestMapping("form")
     @RequiresPermissions(value = {"sys:permission:add", "sys:permission:edit"}, logical = Logical.OR)
     public String form(HttpServletRequest request) {
-        List permissions = new ArrayList<>();
+        /*List permissions = new ArrayList<>();
         for (Permission p : Permission.values()) {
             permissions.add(p);
         }
-        request.setAttribute("permissions", permissions);
+        request.setAttribute("permissions", permissions);*/
         return "roleForm";
     }
 

@@ -20,7 +20,7 @@ import java.lang.reflect.Field;
 @Aspect
 @Component
 @Slf4j
-public class OrgAuthAspect {
+public class AgencyAuthAspect {
 
     @Around("@annotation(agencyAuth)")
     public Object aroundRedisLock(ProceedingJoinPoint joinPoint, AgencyAuth agencyAuth) {
@@ -46,9 +46,9 @@ public class OrgAuthAspect {
             if ("authSql".equals(field.getName())) {
                 field.setAccessible(true);
                 String authSql = " and exists(select 1 from tbl_core_role_user tru,tbl_core_role_agency tra" +
-                        " where tru.roleId = tra.roleId " +
-                        " and tru.userId = '" + UserUtil.getLoginUser().getId() + "' " +
-                        " tra.agencyId = " + targetTableAlies + "." + targetTableColumn + " " +
+                        " where tru.role_id = tra.role_id " +
+                        " and tru.user_id = '" + UserUtil.getLoginUser().getId() + "' " +
+                        " and tra.agency_id = " + targetTableAlies + "." + targetTableColumn + " " +
                         ")";
                 field.set(obj, authSql);
                 break;
