@@ -8,7 +8,11 @@ $(function () {
         success: function (data) {
             if (data && data.code == 200) {
                 user = data.data.user;
-                $("#portrait,#headicon").attr("src", "data:image/jpg;base64," + user.portrait);
+                if (user.portrait==null||user.portrait.length == 0) {
+                    $("#portrait,#headicon").attr("src", ctx + "/images/defaultportrait.jpg");
+                } else {
+                    $("#portrait,#headicon").attr("src", "data:image/jpg;base64," + user.portrait);
+                }
                 $("#username span").text(user.nickName);
                 var menu = user.menuList;
                 if (menu && menu.length != 0) {
@@ -18,7 +22,7 @@ $(function () {
                             var isleaf = m.isLeaf == '1' ? 'leaf' : "";
                             var onelevel = $('<div class="h1 ' + isleaf + '" url="' + m.url + '"><i class="layui-icon ' + m.icon + '"></i>' + m.menuName + '</div>');
                             $("#menuArea").append(onelevel);
-                            var twoWraper =  $('<div class="con hide"></div>');
+                            var twoWraper = $('<div class="con hide"></div>');
                             if (m.child.length != 0) {
                                 $("#menuArea").append(twoWraper);
                                 for (var j = 0; j < m.child.length; j++) {
