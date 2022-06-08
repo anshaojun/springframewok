@@ -37,11 +37,9 @@ public class OperLogAspect {
     @Resource
     OperationLogService operationLogService;
 
-    @Pointcut("@annotation(com.personal.springframework.annotation.OperLog)")
-    public void operLogPointCut(){}
 
-    @AfterReturning(value = "operLogPointCut()",returning = "returns")
-    public void saveOperLog(JoinPoint joinPoint, Object returns) {
+    @AfterReturning(value = "@annotation(operLog)",returning = "returns")
+    public void saveOperLog(JoinPoint joinPoint, Object returns,OperLog operLog) {
         // 获取RequestAttributes
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         // 从获取RequestAttributes中获取HttpServletRequest的信息
@@ -70,7 +68,6 @@ public class OperLogAspect {
             methodName = className + "." + methodName;
 
             operlog.setOperMethod(methodName); // 请求方法
-
             // 请求的参数
             Map<String, String> rtnMap = converMap(request.getParameterMap());
             // 将参数所在的数组转换成json
