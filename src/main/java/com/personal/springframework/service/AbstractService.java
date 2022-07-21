@@ -61,7 +61,7 @@ public abstract class AbstractService<T extends BaseEntity, M extends AbstractMa
 
     @Transactional(readOnly = false)
     public void save(T clazz) {
-        if (clazz.isNew()) {
+        if (clazz.ifNew()) {
             mapper.insert(clazz);
         } else {
             mapper.update(clazz);
@@ -79,7 +79,7 @@ public abstract class AbstractService<T extends BaseEntity, M extends AbstractMa
                     Object value = field.get(clazz);
                     List<T> exists = mapper.getByUniqueParam(column, value);
                     if (CollectionUtil.isNotEmpty(exists)) {
-                        if (clazz.isNew()) {
+                        if (clazz.ifNew()) {
                             throw new ServiceException(text + "重复");
                         } else {
                             boolean exist = exists.stream().filter(o -> o.getId().equals(clazz.getId())).findAny().isPresent();
@@ -94,7 +94,7 @@ public abstract class AbstractService<T extends BaseEntity, M extends AbstractMa
                 break;
             }
         }
-        if (clazz.isNew()) {
+        if (clazz.ifNew()) {
             mapper.insert(clazz);
         } else {
             mapper.update(clazz);

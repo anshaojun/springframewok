@@ -36,7 +36,7 @@ public class UserManageService extends AbstractService<User, UserMapper> {
     public void save(User user) {
         InputStream inputStream = null;
         try {
-            if (user.isNew()) {
+            if (user.ifNew()) {
                 if (user.getHead() == null || user.getHead().getSize() == 0) {
                     inputStream = this.getClass().getResourceAsStream("/static/images/defaultportrait.jpg");
                 } else {
