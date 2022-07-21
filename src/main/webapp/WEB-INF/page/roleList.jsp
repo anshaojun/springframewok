@@ -87,11 +87,7 @@
             defaultToolbar: ['filter', 'print', 'exports'], //这里在右边显示
             toolbar: '#toolbar',   //这里在左边显示，然后指定到模版id
             cols: [
-                [{
-                    field: 'id',
-                    hide: true,
-                    title: "id"
-                }, {
+                [ {
                     field: 'roleName',
                     title: '角色名称',
                     width: '65%',

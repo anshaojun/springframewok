@@ -57,10 +57,6 @@
                     field: 'operModel',
                     align: "center",
                 }, {
-                    field: 'id',
-                    hide: true,
-                    title: "id"
-                }, {
                     field: 'operType',
                     title: '操作类型',
                     sort: true
