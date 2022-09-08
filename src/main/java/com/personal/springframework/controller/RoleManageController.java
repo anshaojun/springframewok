@@ -1,8 +1,11 @@
 package com.personal.springframework.controller;
 
+import com.personal.springframework.annotation.OperLog;
 import com.personal.springframework.model.*;
 import com.personal.springframework.model.core.Page;
 import com.personal.springframework.model.enums.BizCodeEnum;
+import com.personal.springframework.model.enums.OperModel;
+import com.personal.springframework.model.enums.OperType;
 import com.personal.springframework.model.enums.Permission;
 import com.personal.springframework.service.RoleManageService;
 import com.personal.springframework.util.StringUtils;
@@ -93,6 +96,7 @@ public class RoleManageController extends AbstractController {
     @RequestMapping("save")
     @RequiresPermissions(value = {"sys:permission:add", "sys:permission:edit"}, logical = Logical.OR)
     @ResponseBody
+    @OperLog(operType = OperType.SAVE,operModel = OperModel.ROLE,operDesc = "保存角色")
     public ResponseResult save(@Validated Role role) {
         roleManageService.saveNotExists(role, "role_name", "roleName", "角色名称");
         return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());

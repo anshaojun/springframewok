@@ -33,7 +33,7 @@ public class BaseEntity extends Page {
 
     private String authSql;
 
-    public boolean isNew() {
+    public boolean ifNew() {
         if (StringUtils.isNotBlank(getId())) {
             return false;
         } else {

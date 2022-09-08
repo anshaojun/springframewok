@@ -1470,7 +1470,7 @@ a cite {
 }
 
 .layui-col-space15 {
-    margin: -7.5px
+    margin-top: 7.5px;
 }
 
 .layui-col-space15 > * {

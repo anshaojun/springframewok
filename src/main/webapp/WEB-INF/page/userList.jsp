@@ -94,10 +94,6 @@
                     width: 100,
                     templet: '<div><img style="width: 28px;height: 28px;border-radius: 14px;border: 1px gray solid" src="data:image/jpeg;base64,{{ d.portrait}}"></div>',
                 }, {
-                    field: 'id',
-                    hide: true,
-                    title: "id"
-                }, {
                     field: 'userName',
                     title: '用户名称',
                     sort: true
