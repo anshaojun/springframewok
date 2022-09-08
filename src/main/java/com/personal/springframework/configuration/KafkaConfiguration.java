@@ -1,9 +1,9 @@
-package com.personal.springframework.configuration;/*
-package com.anshaojun.personalhub.configuration;
+package com.personal.springframework.configuration;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -13,14 +13,14 @@ import org.springframework.kafka.listener.ContainerProperties;
 import java.util.HashMap;
 import java.util.Map;
 
-*/
 /**
  * @description：kafka批量消费配置（不使用批量消费无需配置）
  * @author: anshaojun
  * @time: 2021-05-19 08:27
- *//*
+ */
 
 @Configuration
+@ConditionalOnProperty(prefix = "kafka",name = "enable",havingValue = "true")
 public class KafkaConfiguration {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
@@ -55,4 +55,4 @@ public class KafkaConfiguration {
         return props;
     }
 }
-*/
+
