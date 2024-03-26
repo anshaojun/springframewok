@@ -73,7 +73,6 @@ public class MVCConfiguration implements WebMvcConfigurer, ErrorPageRegistrar {
     public ServletRegistrationBean servletRegistrationBean(DispatcherServlet dispatcherServlet) {
         ServletRegistrationBean<DispatcherServlet> servletServletRegistrationBean = new ServletRegistrationBean<>(dispatcherServlet);
         servletServletRegistrationBean.addUrlMappings("*.do");
-        servletServletRegistrationBean.addUrlMappings("*.action");
         servletServletRegistrationBean.addUrlMappings("*.html");
         servletServletRegistrationBean.addUrlMappings("*.css");
         servletServletRegistrationBean.addUrlMappings("*.js");
@@ -184,4 +183,5 @@ public class MVCConfiguration implements WebMvcConfigurer, ErrorPageRegistrar {
         resolver.setMaxUploadSize(maxUploadSize);
         return resolver;
     }
+
 }

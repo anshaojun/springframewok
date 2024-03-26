@@ -21,6 +21,8 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.util.SavedRequest;
+import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -162,6 +164,7 @@ public class LoginController {
         }
         if (subject.isAuthenticated()) {
             //重定向到之前页面
+            //存在子页面成为主页面的问题，暂时注释
             /*SavedRequest savedRequest = WebUtils.getSavedRequest(request);
             if (savedRequest != null) {
                 log.info("saved request:{}", savedRequest.getRequestURI());

@@ -15,7 +15,8 @@ public class MainController {
      * 主页
      * @return
      */
-    @RequestMapping("")
+    //空路径被404.疑似依赖版本问题
+    @RequestMapping("/main")
     public String index(){
         return "index";
     }

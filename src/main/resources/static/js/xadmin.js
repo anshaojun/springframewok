@@ -8,7 +8,7 @@ $(function () {
         success: function (data) {
             if (data && data.code == 200) {
                 user = data.data.user;
-                if (user.portrait==null||user.portrait.length == 0) {
+                if (user.portrait == null || user.portrait.length == 0) {
                     $("#portrait,#headicon").attr("src", ctx + "/images/defaultportrait.jpg");
                 } else {
                     $("#portrait,#headicon").attr("src", "data:image/jpg;base64," + user.portrait);
@@ -61,7 +61,8 @@ $(function () {
             url: ctx + "/login/logout.do",
             success: function (result) {
                 if (result.code = 200) {
-                    window.location.href = ctx;
+                    var logoutUrl = ctx + '/main.do'
+                    window.location.href = logoutUrl;
                 }
             }
         });

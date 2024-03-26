@@ -97,6 +97,8 @@
                             var successUrl = '${ctx}';
                             if (savedUrl != null && savedUrl != 'undefined' && savedUrl.length != 0) {
                                 successUrl += savedUrl;
+                            } else {
+                                successUrl += "/main.do";
                             }
                             window.location.href = successUrl;
                         } else {
