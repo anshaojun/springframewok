@@ -1,5 +1,6 @@
 package com.personal.springframework.configuration;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -16,11 +17,10 @@ import javax.sql.DataSource;
  */
 @Configuration
 public class DatasourceConfiguration {
-    @Bean(name = "dataSource")
-    @Qualifier(value = "dataSource")
-    @Primary
-    @ConfigurationProperties(prefix = "c3p0")
-    public DataSource dataSource() {
-        return DataSourceBuilder.create().type(com.mchange.v2.c3p0.ComboPooledDataSource.class).build();
+
+    @ConfigurationProperties(prefix = "spring.datasource")
+    @Bean
+    public DataSource druid(){
+        return new DruidDataSource();
     }
 }

@@ -1,10 +1,6 @@
 package com.personal.springframework.interceptor.core;
 
-import com.personal.springframework.constant.RoleOptions;
-import com.personal.springframework.model.Role;
-import com.personal.springframework.model.User;
 import com.personal.springframework.model.core.Page;
-import com.personal.springframework.util.UserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
@@ -22,9 +18,7 @@ import org.springframework.stereotype.Component;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.List;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
 /**
  * @program: springframework
@@ -35,9 +29,9 @@ import java.util.stream.Collectors;
 @Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class, Integer.class})})
 @Slf4j
 @Component
-@PropertySource("classpath:application-c3p0.properties")
+@PropertySource("classpath:application-druid.properties")
 public class PageInterceptor implements Interceptor {
-    @Value("${c3p0.type}")
+    @Value("${datasource.type}")
     private String jdbcType;
 
     @Override
