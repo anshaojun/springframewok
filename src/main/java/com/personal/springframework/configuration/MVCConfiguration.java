@@ -4,10 +4,13 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.personal.springframework.interceptor.core.AccessLimitInterceptor;
+import org.apache.catalina.Context;
+import org.apache.tomcat.util.scan.StandardJarScanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.boot.web.server.ErrorPageRegistrar;
 import org.springframework.boot.web.server.ErrorPageRegistry;
@@ -184,4 +187,14 @@ public class MVCConfiguration implements WebMvcConfigurer, ErrorPageRegistrar {
         return resolver;
     }
 
+    //禁用springboot内嵌tomcat的MANIFEST扫描
+    @Bean
+    public TomcatServletWebServerFactory tomcatServletWebServerFactory(){
+        return new TomcatServletWebServerFactory(){
+            @Override
+            protected void postProcessContext(Context context){
+                ((StandardJarScanner) context.getJarScanner()).setScanManifest(false);
+            }
+        };
+    }
 }
