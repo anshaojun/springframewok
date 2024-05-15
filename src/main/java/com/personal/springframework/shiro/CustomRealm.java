@@ -3,7 +3,7 @@ package com.personal.springframework.shiro;
 import cn.hutool.core.collection.CollectionUtil;
 import com.personal.springframework.model.Menu;
 import com.personal.springframework.model.User;
-import com.personal.springframework.model.enums.BizCodeEnum;
+import com.personal.springframework.model.enums.AjaxResultEnum;
 import com.personal.springframework.service.LoginService;
 import com.personal.springframework.util.StringUtils;
 import com.personal.springframework.util.UserUtil;
@@ -81,11 +81,11 @@ public class CustomRealm extends AuthorizingRealm {
         user.setPassWord(passWord);
         User auth = loginService.userCheck(user);
         if (auth == null) {
-            throw new AuthenticationException(BizCodeEnum.UNKNOWNACCOUNT_EXCEPTION.getMsg());
+            throw new AuthenticationException(AjaxResultEnum.UNKNOWNACCOUNT_EXCEPTION.getMsg());
         }
         auth = loginService.loginCheck(user);
         if (auth == null) {
-            throw new AuthenticationException(BizCodeEnum.INCORRECTCREDENTIALS_EXCEPTION.getMsg());
+            throw new AuthenticationException(AjaxResultEnum.INCORRECTCREDENTIALS_EXCEPTION.getMsg());
         }
         return new SimpleAuthenticationInfo(auth, passWord, getName());
     }

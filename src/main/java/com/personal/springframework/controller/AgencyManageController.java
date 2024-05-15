@@ -1,9 +1,8 @@
 package com.personal.springframework.controller;
 
-import com.personal.springframework.annotation.AgencyAuth;
 import com.personal.springframework.model.Agency;
 import com.personal.springframework.model.ResponseResult;
-import com.personal.springframework.model.enums.BizCodeEnum;
+import com.personal.springframework.model.enums.AjaxResultEnum;
 import com.personal.springframework.service.AgencyManageService;
 import com.personal.springframework.util.StringUtils;
 import org.apache.shiro.authz.annotation.Logical;
@@ -90,7 +89,7 @@ public class AgencyManageController extends AbstractController {
     @RequiresPermissions(value = {"sys:agency:add", "sys:agency:edit"}, logical = Logical.OR)
     public ResponseResult save(@Validated Agency agency) {
         agencyManageService.save(agency);
-        return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
+        return ResponseResult.success(AjaxResultEnum.SUCCESS.getMsg());
     }
 
 
@@ -106,6 +105,6 @@ public class AgencyManageController extends AbstractController {
     @RequiresPermissions(value = {"sys:agency:del"})
     public ResponseResult del(Agency agency) {
         agencyManageService.delete(agency.getId());
-        return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
+        return ResponseResult.success(AjaxResultEnum.SUCCESS.getMsg());
     }
 }

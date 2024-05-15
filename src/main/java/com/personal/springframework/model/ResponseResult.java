@@ -1,5 +1,7 @@
 package com.personal.springframework.model;
 
+import com.personal.springframework.model.enums.AjaxResultEnum;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,9 +40,22 @@ public class ResponseResult {
         this.data = data;
     }
 
+    public static ResponseResult error(String msg) {
+        return error(AjaxResultEnum.SERVICE_EXCEPTION.getCode(), msg);
+    }
+
     public static ResponseResult error(int code, String msg) {
         return new ResponseResult(code, msg);
     }
+
+    public static ResponseResult result(AjaxResultEnum ajaxResultEnum) {
+        return new ResponseResult(ajaxResultEnum.getCode(), ajaxResultEnum.getMsg());
+    }
+
+    public static ResponseResult success(String msg) {
+        return success(AjaxResultEnum.SUCCESS.getCode(), msg);
+    }
+
     public static ResponseResult success(int code, String msg) {
         return new ResponseResult(code, msg);
     }

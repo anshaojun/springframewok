@@ -27,6 +27,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,6 +126,7 @@ public class MVCConfiguration implements WebMvcConfigurer, ErrorPageRegistrar {
         registry.addResourceHandler("/fonts/**").addResourceLocations("classpath:static/fonts/");
         registry.addResourceHandler("/images/**").addResourceLocations("classpath:static/images/");
         registry.addResourceHandler("/html/**").addResourceLocations("classpath:static/html/");
+        registry.addResourceHandler( "/statics/**").addResourceLocations("file:" + filePath + File.separator);
     }
 
     /**
@@ -140,6 +142,7 @@ public class MVCConfiguration implements WebMvcConfigurer, ErrorPageRegistrar {
         errorPages[0] = new ErrorPage(HttpStatus.NOT_FOUND, "/html/404.html");
         registry.addErrorPages(errorPages);
     }
+
 
     /**
      * @Author 安少军
@@ -161,6 +164,8 @@ public class MVCConfiguration implements WebMvcConfigurer, ErrorPageRegistrar {
 
     @Value("${resolver.defaultEncoding}")
     private String defaultEncoding;
+    @Value("${resolver.filePath}")
+    private String filePath;
     @Value("${resolver.resolveLazily}")
     private boolean resolveLazily;
     @Value("${resolver.maxInMemorySize}")
@@ -183,7 +188,7 @@ public class MVCConfiguration implements WebMvcConfigurer, ErrorPageRegistrar {
         resolver.setResolveLazily(resolveLazily);
         resolver.setMaxInMemorySize(maxInMemorySize);
         //上传文件大小 50M 50*1024*1024
-        resolver.setMaxUploadSize(maxUploadSize);
+        resolver.setMaxUploadSize(maxUploadSize*1024*1024);
         return resolver;
     }
 

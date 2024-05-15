@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JS??Ƭ?ϴ?-?????ϴ?</title>
+</head>
+<body>
+<input type="file" name="slice" id="slice" >
+<br/>
+</body>
+<script src="http://libs.baidu.com/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $("#slice").change(function(event) {
+        var file = $("#slice")[0].files[0];
+        PostFile(file,0);
+    });
+    function PostFile(file,i, uuid){
+        var name = file.name,
+            size = file.size,
+            shardSize = 10 * 1024 * 1024,
+            shardCount = Math.ceil(size / shardSize);
+        if(i >= shardCount){
+            return;
+        }
+        if (uuid === null || uuid === undefined) {
+            uuid = guid();
+        }
+        var start = i * shardSize;
+        var end = start + shardSize;
+        var packet = file.slice(start, end);
+        var form = new FormData();
+        form.append("uuid", uuid);
+        form.append("file", packet);
+        form.append("fileName", name);
+        form.append("piece", true);
+        form.append("total", shardCount);
+        form.append("index", i + 1);
+        $.ajax({
+            url: "http://127.0.0.1:8080/fileUpload/upload.do",
+            type: "POST",
+            data: form,
+            async: true,
+            dataType:"json",
+            processData: false,
+            contentType: false,
+            success: function (msg) {
+                console.log(msg);
+
+                if (msg.code === 201) {
+                    form = '';
+                    i++;
+                    PostFile(file, i, uuid);
+                } else if (msg.code === 502) {
+                    form = '';
+
+                    setInterval(function () { PostFile(file, i, uuid) }, 2000);
+                } else if (msg.code === 200) {
+                    merge(uuid, name)
+                } else if (msg.code === 500) {
+                } else {
+                }
+            }
+        })
+    }
+
+    function merge(uuid, fileName) {
+        $.ajax({
+            url: "http://127.0.0.1:8080/fileUpload/merge.do",
+            type: "GET",
+            data: {uuid: uuid, newFileName: fileName},
+            //timeout:"10000",
+            async: true, //?첽
+            dataType:"json",
+            success: function (msg) {
+                console.log(msg);
+            }
+        })
+    }
+
+    function guid() {
+        return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0,
+                v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+</script>
+</html>

@@ -1,11 +1,8 @@
 package com.personal.springframework.controller;
 
-import com.personal.springframework.annotation.OperLog;
 import com.personal.springframework.model.Menu;
 import com.personal.springframework.model.ResponseResult;
-import com.personal.springframework.model.enums.BizCodeEnum;
-import com.personal.springframework.model.enums.OperModel;
-import com.personal.springframework.model.enums.OperType;
+import com.personal.springframework.model.enums.AjaxResultEnum;
 import com.personal.springframework.service.MenuManageService;
 import com.personal.springframework.util.StringUtils;
 import org.apache.shiro.authz.annotation.Logical;
@@ -61,17 +58,17 @@ public class MenuManageController {
      **/
     @RequestMapping("loadMenu")
     @ResponseBody
-    @RequiresPermissions(value = {"sys:menu:list","sys:permission:addmenu"},logical = Logical.OR)
-    public Object loadMenu(@RequestParam(value = "roleId",required = false) String roleId, @RequestParam("checkbox") boolean checkbox) {
-        return menuManageService.loadMenuTree(roleId,checkbox);
+    @RequiresPermissions(value = {"sys:menu:list", "sys:permission:addmenu"}, logical = Logical.OR)
+    public Object loadMenu(@RequestParam(value = "roleId", required = false) String roleId, @RequestParam("checkbox") boolean checkbox) {
+        return menuManageService.loadMenuTree(roleId, checkbox);
     }
 
     /**
+     * @return com.personal.springframework.model.Menu
      * @Author 安少军
      * @Description 获取菜单信息
      * @Date 17:19 2022/1/26
      * @Param [menu]
-     * @return com.personal.springframework.model.Menu
      **/
     @RequestMapping("getMenu")
     @ResponseBody
@@ -81,33 +78,33 @@ public class MenuManageController {
     }
 
     /**
+     * @return com.personal.springframework.model.ResponseResult
      * @Author 安少军
      * @Description 保存菜单
      * @Date 17:19 2022/1/26
      * @Param [menu]
-     * @return com.personal.springframework.model.ResponseResult
      **/
     @RequestMapping("save")
     @ResponseBody
     @RequiresPermissions(value = {"sys:menu:add", "sys:menu:edit"}, logical = Logical.OR)
     public ResponseResult save(@Validated Menu menu) {
         menuManageService.save(menu);
-        return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
+        return ResponseResult.success(AjaxResultEnum.SUCCESS.getMsg());
     }
 
     /**
+     * @return com.personal.springframework.model.ResponseResult
      * @Author 安少军
      * @Description 删除菜单
      * @Date 17:20 2022/1/26
      * @Param [menu]
-     * @return com.personal.springframework.model.ResponseResult
      **/
     @RequestMapping("del")
     @ResponseBody
     @RequiresPermissions(value = {"sys:menu:del"})
     public ResponseResult del(Menu menu) {
         menuManageService.delete(menu.getId());
-        return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
+        return ResponseResult.success(AjaxResultEnum.SUCCESS.getMsg());
     }
 
 

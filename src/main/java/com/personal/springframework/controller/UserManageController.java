@@ -3,7 +3,7 @@ package com.personal.springframework.controller;
 import com.personal.springframework.model.ResponseResult;
 import com.personal.springframework.model.User;
 import com.personal.springframework.model.core.Page;
-import com.personal.springframework.model.enums.BizCodeEnum;
+import com.personal.springframework.model.enums.AjaxResultEnum;
 import com.personal.springframework.service.UserManageService;
 import com.personal.springframework.util.StringUtils;
 import org.apache.shiro.authz.annotation.Logical;
@@ -91,7 +91,7 @@ public class UserManageController extends AbstractController {
     @ResponseBody
     public ResponseResult save(@Validated User user) {
         userManageService.save(user);
-        return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
+        return ResponseResult.success(AjaxResultEnum.SUCCESS.getCode(), AjaxResultEnum.SUCCESS.getMsg());
     }
 
     /**
@@ -106,7 +106,7 @@ public class UserManageController extends AbstractController {
     @RequestMapping("delete")
     public ResponseResult delete(@RequestParam("id") String id){
         userManageService.delete(id);
-        return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
+        return ResponseResult.success(AjaxResultEnum.SUCCESS.getCode(), AjaxResultEnum.SUCCESS.getMsg());
     }
 
     /**
@@ -121,7 +121,7 @@ public class UserManageController extends AbstractController {
     @RequestMapping("batchDelete")
     public ResponseResult batchDelete(@RequestParam("ids[]") String[] ids){
         userManageService.batchDelete(ids);
-        return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
+        return ResponseResult.success(AjaxResultEnum.SUCCESS.getCode(), AjaxResultEnum.SUCCESS.getMsg());
     }
 
     @RequestMapping("loadUser")

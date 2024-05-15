@@ -1,13 +1,10 @@
 package com.personal.springframework.controller;
 
 import com.personal.springframework.annotation.AccessLimit;
-import com.personal.springframework.annotation.OperLog;
 import com.personal.springframework.constant.Constant;
 import com.personal.springframework.model.ResponseResult;
 import com.personal.springframework.model.User;
-import com.personal.springframework.model.enums.BizCodeEnum;
-import com.personal.springframework.model.enums.OperModel;
-import com.personal.springframework.model.enums.OperType;
+import com.personal.springframework.model.enums.AjaxResultEnum;
 import com.personal.springframework.service.LoginService;
 import com.personal.springframework.shiro.SessionDAO;
 import com.personal.springframework.util.IPUtil;
@@ -21,8 +18,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.web.util.SavedRequest;
-import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -101,7 +96,7 @@ public class LoginController {
             HttpServletResponse response
     ) {
         if (StringUtils.isBlank(username) || StringUtils.isBlank(password) /*|| StringUtils.isBlank(validation)*/) {
-            return ResponseResult.error(BizCodeEnum.VAILD_EXCEPTION.getCode(), BizCodeEnum.VAILD_EXCEPTION.getMsg());
+            return ResponseResult.error(AjaxResultEnum.VAILD_EXCEPTION.getCode(), AjaxResultEnum.VAILD_EXCEPTION.getMsg());
         }
         Subject subject = SecurityUtils.getSubject();
         //String sessionId = UserUtil.getSessionId();
@@ -148,19 +143,19 @@ public class LoginController {
             loginService.updateLoginInfo(user);
         } catch (UnknownAccountException uae) {
             token.clear();
-            return ResponseResult.error(BizCodeEnum.UNKNOWNACCOUNT_EXCEPTION.getCode(), BizCodeEnum.UNKNOWNACCOUNT_EXCEPTION.getMsg());
+            return ResponseResult.error(AjaxResultEnum.UNKNOWNACCOUNT_EXCEPTION.getCode(), AjaxResultEnum.UNKNOWNACCOUNT_EXCEPTION.getMsg());
         } catch (IncorrectCredentialsException ice) {
             token.clear();
-            return ResponseResult.error(BizCodeEnum.INCORRECTCREDENTIALS_EXCEPTION.getCode(), BizCodeEnum.INCORRECTCREDENTIALS_EXCEPTION.getMsg());
+            return ResponseResult.error(AjaxResultEnum.INCORRECTCREDENTIALS_EXCEPTION.getCode(), AjaxResultEnum.INCORRECTCREDENTIALS_EXCEPTION.getMsg());
         } catch (LockedAccountException lae) {
             token.clear();
-            return ResponseResult.error(BizCodeEnum.LOCKEDACCOUNT_EXCEPTION.getCode(), BizCodeEnum.LOCKEDACCOUNT_EXCEPTION.getMsg());
+            return ResponseResult.error(AjaxResultEnum.LOCKEDACCOUNT_EXCEPTION.getCode(), AjaxResultEnum.LOCKEDACCOUNT_EXCEPTION.getMsg());
         } catch (ExcessiveAttemptsException eae) {
             token.clear();
-            return ResponseResult.error(BizCodeEnum.EXCESSIVEATTEMPTS_EXCEPTION.getCode(), BizCodeEnum.EXCESSIVEATTEMPTS_EXCEPTION.getMsg());
+            return ResponseResult.error(AjaxResultEnum.EXCESSIVEATTEMPTS_EXCEPTION.getCode(), AjaxResultEnum.EXCESSIVEATTEMPTS_EXCEPTION.getMsg());
         } catch (AuthenticationException ae) {
             token.clear();
-            return ResponseResult.error(BizCodeEnum.AUTHENTICATION_EXCEPTION.getCode(), ae.getMessage());
+            return ResponseResult.error(AjaxResultEnum.AUTHENTICATION_EXCEPTION.getCode(), ae.getMessage());
         }
         if (subject.isAuthenticated()) {
             //重定向到之前页面
@@ -168,12 +163,12 @@ public class LoginController {
             /*SavedRequest savedRequest = WebUtils.getSavedRequest(request);
             if (savedRequest != null) {
                 log.info("saved request:{}", savedRequest.getRequestURI());
-                return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg()).put("savedUri", savedRequest.getRequestURI());
+                return ResponseResult.success( BizCodeEnum.SUCCESS.getMsg()).put("savedUri", savedRequest.getRequestURI());
             }*/
-            return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
+            return ResponseResult.success(AjaxResultEnum.SUCCESS.getMsg());
         } else {
             token.clear();
-            return ResponseResult.error(BizCodeEnum.LOGIN_EXCEPTION.getCode(), BizCodeEnum.LOGIN_EXCEPTION.getMsg());
+            return ResponseResult.error(AjaxResultEnum.LOGIN_EXCEPTION.getCode(), AjaxResultEnum.LOGIN_EXCEPTION.getMsg());
         }
     }
 
@@ -189,7 +184,7 @@ public class LoginController {
     public ResponseResult logout() {
         Subject subject = SecurityUtils.getSubject();
         subject.logout();
-        return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
+        return ResponseResult.success(AjaxResultEnum.SUCCESS.getMsg());
     }
 
     /**
@@ -205,9 +200,9 @@ public class LoginController {
         User user = UserUtil.getLoginUser();
         user.setPassWord(null);
         if (user != null) {
-            return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg()).put("user", user);
+            return ResponseResult.success(AjaxResultEnum.SUCCESS.getMsg()).put("user", user);
         } else {
-            return ResponseResult.success(BizCodeEnum.SESSION_EXCEPTION.getCode(), BizCodeEnum.SESSION_EXCEPTION.getMsg());
+            return ResponseResult.error(AjaxResultEnum.SESSION_EXCEPTION.getMsg());
         }
     }
 }

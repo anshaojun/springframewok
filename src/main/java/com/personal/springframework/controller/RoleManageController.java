@@ -3,10 +3,9 @@ package com.personal.springframework.controller;
 import com.personal.springframework.annotation.OperLog;
 import com.personal.springframework.model.*;
 import com.personal.springframework.model.core.Page;
-import com.personal.springframework.model.enums.BizCodeEnum;
+import com.personal.springframework.model.enums.AjaxResultEnum;
 import com.personal.springframework.model.enums.OperModel;
 import com.personal.springframework.model.enums.OperType;
-import com.personal.springframework.model.enums.Permission;
 import com.personal.springframework.service.RoleManageService;
 import com.personal.springframework.util.StringUtils;
 import org.apache.shiro.authz.annotation.Logical;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -96,10 +94,10 @@ public class RoleManageController extends AbstractController {
     @RequestMapping("save")
     @RequiresPermissions(value = {"sys:permission:add", "sys:permission:edit"}, logical = Logical.OR)
     @ResponseBody
-    @OperLog(operType = OperType.SAVE,operModel = OperModel.ROLE,operDesc = "保存角色")
+    @OperLog(operType = OperType.SAVE, operModel = OperModel.ROLE, operDesc = "保存角色")
     public ResponseResult save(@Validated Role role) {
         roleManageService.saveNotExists(role, "role_name", "roleName", "角色名称");
-        return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
+        return ResponseResult.success(AjaxResultEnum.SUCCESS.getMsg());
     }
 
     /**
@@ -114,15 +112,15 @@ public class RoleManageController extends AbstractController {
     @ResponseBody
     public ResponseResult delete(Role role) {
         roleManageService.delete(role);
-        return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
+        return ResponseResult.success(AjaxResultEnum.SUCCESS.getMsg());
     }
 
     /**
+     * @return java.lang.String
      * @Author 安少军
      * @Description 关联菜单页面
      * @Date 16:09 2022/2/8
      * @Param []
-     * @return java.lang.String
      **/
     @RequestMapping(value = "roleMenu", method = RequestMethod.GET)
     @RequiresPermissions({"sys:permission:addmenu"})
@@ -131,11 +129,11 @@ public class RoleManageController extends AbstractController {
     }
 
     /**
+     * @return java.lang.String
      * @Author 安少军
      * @Description 关联单位页面
      * @Date 12:06 2022/3/4
      * @Param []
-     * @return java.lang.String
      **/
     @RequestMapping(value = "roleAgency", method = RequestMethod.GET)
     @RequiresPermissions({"sys:permission:addagency"})
@@ -144,11 +142,11 @@ public class RoleManageController extends AbstractController {
     }
 
     /**
+     * @return java.lang.String
      * @Author 安少军
      * @Description 关联用户
      * @Date 16:17 2022/3/2
      * @Param []
-     * @return java.lang.String
      **/
     @RequestMapping(value = "roleUser", method = RequestMethod.GET)
     @RequiresPermissions({"sys:permission:addmenu"})
@@ -159,10 +157,11 @@ public class RoleManageController extends AbstractController {
 
     /**
      * 获取关联用户
-     * @author anshaojun
-     * @date 2022/5/31 0031 15:19
+     *
      * @param role
      * @return java.lang.String[]
+     * @author anshaojun
+     * @date 2022/5/31 0031 15:19
      **/
     @RequestMapping("getConnectedUser")
     @ResponseBody
@@ -177,48 +176,48 @@ public class RoleManageController extends AbstractController {
     }
 
     /**
+     * @return com.personal.springframework.model.ResponseResult
      * @Author 安少军
      * @Description 关联菜单
      * @Date 16:09 2022/2/8
      * @Param [roleId, menus]
-     * @return com.personal.springframework.model.ResponseResult
      **/
     @RequestMapping(value = "roleMenu", method = RequestMethod.POST)
     @RequiresPermissions({"sys:permission:addmenu"})
     @ResponseBody
-    public ResponseResult roleMenuSave(@RequestParam("roleId") String roleId, @RequestParam(value = "menuIds[]",required = false) String[] menus) {
+    public ResponseResult roleMenuSave(@RequestParam("roleId") String roleId, @RequestParam(value = "menuIds[]", required = false) String[] menus) {
         roleManageService.connectRoleMenu(roleId, menus);
-        return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
+        return ResponseResult.success(AjaxResultEnum.SUCCESS.getMsg());
     }
 
     /**
+     * @return com.personal.springframework.model.ResponseResult
      * @Author 安少军
      * @Description 关联角色单位
      * @Date 12:07 2022/3/4
      * @Param [roleId, agencys]
-     * @return com.personal.springframework.model.ResponseResult
      **/
     @RequestMapping(value = "roleAgency", method = RequestMethod.POST)
     @RequiresPermissions({"sys:permission:addagency"})
     @ResponseBody
-    public ResponseResult roleAgencySave(@RequestParam("roleId") String roleId, @RequestParam(value = "agencyIds[]",required = false) String[] agencys) {
+    public ResponseResult roleAgencySave(@RequestParam("roleId") String roleId, @RequestParam(value = "agencyIds[]", required = false) String[] agencys) {
         roleManageService.connectRoleAgency(roleId, agencys);
-        return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
+        return ResponseResult.success(AjaxResultEnum.SUCCESS.getMsg());
     }
 
     /**
      * 关联角色用户
-     * @author anshaojun
-     * @date 2022/5/31 0031 15:19
      * @param roleId
      * @param users
      * @return com.personal.springframework.model.ResponseResult
+     * @author anshaojun
+     * @date 2022/5/31 0031 15:19
      **/
     @RequestMapping(value = "roleUser", method = RequestMethod.POST)
     @RequiresPermissions({"sys:permission:adduser"})
     @ResponseBody
-    public ResponseResult roleUser(@RequestParam("roleId") String roleId, @RequestParam(value = "userIds[]",required = false) String[] users) {
+    public ResponseResult roleUser(@RequestParam("roleId") String roleId, @RequestParam(value = "userIds[]", required = false) String[] users) {
         roleManageService.connectRoleUser(roleId, users);
-        return ResponseResult.success(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg());
+        return ResponseResult.success(AjaxResultEnum.SUCCESS.getMsg());
     }
 }

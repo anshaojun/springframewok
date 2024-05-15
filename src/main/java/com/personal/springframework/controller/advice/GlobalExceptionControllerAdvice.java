@@ -2,7 +2,7 @@ package com.personal.springframework.controller.advice;
 
 import com.personal.springframework.exception.ServiceException;
 import com.personal.springframework.model.ResponseResult;
-import com.personal.springframework.model.enums.BizCodeEnum;
+import com.personal.springframework.model.enums.AjaxResultEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.jdbc.BadSqlGrammarException;
@@ -41,7 +41,7 @@ public class GlobalExceptionControllerAdvice {
             msg = ":" + sb.substring(0, sb.lastIndexOf(","));
         }
         e.printStackTrace();
-        return ResponseResult.error(BizCodeEnum.VAILD_EXCEPTION.getCode(), BizCodeEnum.VAILD_EXCEPTION.getMsg() + msg);
+        return ResponseResult.error(AjaxResultEnum.VAILD_EXCEPTION.getCode(), AjaxResultEnum.VAILD_EXCEPTION.getMsg() + msg);
     }
 
     //自定义异常
@@ -49,7 +49,7 @@ public class GlobalExceptionControllerAdvice {
     @ResponseBody
     public ResponseResult handleException(ServiceException e) {
         e.printStackTrace();
-        return ResponseResult.error(BizCodeEnum.SERVICE_EXCEPTION.getCode(), BizCodeEnum.SERVICE_EXCEPTION.getMsg() + ":" + e.getMessage());
+        return ResponseResult.error(AjaxResultEnum.SERVICE_EXCEPTION.getCode(), AjaxResultEnum.SERVICE_EXCEPTION.getMsg() + ":" + e.getMessage());
     }
 
     //400参数缺失异常
@@ -57,7 +57,7 @@ public class GlobalExceptionControllerAdvice {
     @ResponseBody
     public ResponseResult handleException(MissingServletRequestParameterException e) {
         e.printStackTrace();
-        return ResponseResult.error(BizCodeEnum.VAILD_EXCEPTION.getCode(), BizCodeEnum.VAILD_EXCEPTION.getMsg());
+        return ResponseResult.error(AjaxResultEnum.VAILD_EXCEPTION.getCode(), AjaxResultEnum.VAILD_EXCEPTION.getMsg());
     }
 
     //shiro权限异常
@@ -65,7 +65,7 @@ public class GlobalExceptionControllerAdvice {
     @ResponseBody
     public ResponseResult handleException(UnauthorizedException e) {
         e.printStackTrace();
-        return ResponseResult.error(BizCodeEnum.UNAUTHORIZED_EXCEPTION.getCode(), BizCodeEnum.UNAUTHORIZED_EXCEPTION.getMsg());
+        return ResponseResult.error(AjaxResultEnum.UNAUTHORIZED_EXCEPTION.getCode(), AjaxResultEnum.UNAUTHORIZED_EXCEPTION.getMsg());
     }
 
     //SQL异常
@@ -73,13 +73,13 @@ public class GlobalExceptionControllerAdvice {
     @ResponseBody
     public ResponseResult handleException(BadSqlGrammarException e) {
         e.printStackTrace();
-        return ResponseResult.error(BizCodeEnum.INNER_EXCEPTION.getCode(), BizCodeEnum.INNER_EXCEPTION.getMsg());
+        return ResponseResult.error(AjaxResultEnum.INNER_EXCEPTION.getCode(), AjaxResultEnum.INNER_EXCEPTION.getMsg());
     }
     @ExceptionHandler(value = SQLIntegrityConstraintViolationException.class)
     @ResponseBody
     public ResponseResult handleException(SQLIntegrityConstraintViolationException e) {
         e.printStackTrace();
-        return ResponseResult.error(BizCodeEnum.INNER_EXCEPTION.getCode(), BizCodeEnum.INNER_EXCEPTION.getMsg());
+        return ResponseResult.error(AjaxResultEnum.INNER_EXCEPTION.getCode(), AjaxResultEnum.INNER_EXCEPTION.getMsg());
     }
 
     //其他异常
@@ -87,7 +87,7 @@ public class GlobalExceptionControllerAdvice {
     @ResponseBody
     public ResponseResult handleException(Exception e) {
         e.printStackTrace();
-        return ResponseResult.error(BizCodeEnum.UNKNOW_EXCEPTION.getCode(), BizCodeEnum.UNKNOW_EXCEPTION.getMsg());
+        return ResponseResult.error(AjaxResultEnum.UNKNOW_EXCEPTION.getCode(), AjaxResultEnum.UNKNOW_EXCEPTION.getMsg());
     }
 
 }

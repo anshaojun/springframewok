@@ -6,12 +6,18 @@ package com.personal.springframework.model.enums;
  * @author: 安少军
  * @create: 2021-12-21 11:41
  **/
-public enum BizCodeEnum {
+public enum AjaxResultEnum {
+
     SUCCESS(200,"成功"),
     SERVICE_EXCEPTION(500,"业务逻辑错误"),
     INNER_EXCEPTION(500,"内部数据错误"),
     UNKNOW_EXCEPTION(10000, "系统未知异常"),
     VAILD_EXCEPTION(400, "参数格式校验失败"),
+
+    STEP_SUCCESS(201,"步骤成功"),
+    STEP_FAIL(502,"步骤失败"),
+    UPLOAD_FAIL(500,"上传失败"),
+    MERGE_FAIL(500,"合并失败"),
 
     UNKNOWNACCOUNT_EXCEPTION(500, "未知账户"),
     VALIDATION_EXCEPTION(500, "验证码已失效"),
@@ -27,7 +33,7 @@ public enum BizCodeEnum {
     private int code;
     private String msg;
 
-    BizCodeEnum(int code, String msg) {
+    AjaxResultEnum(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }
